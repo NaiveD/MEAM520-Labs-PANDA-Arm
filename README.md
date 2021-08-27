@@ -4,12 +4,13 @@
 Maintainers: Contact FY2021 TAs
 
 # Directory Structure:
-- lib: Will contain functions that you will implement that relate to material learned in class
-- labs: This is where your test code will exist
-- panda_robot: XXX Jake is working on this
+- lib: will contain functions implementing algorithms to solve computational problems relating to the class material, such as forward and inverse kinematics and trajectory planning
+- core: contains support code we provide to you, such as helper functions and interfaces for interacting with the robot (either simulated or real!)
+- labs: will contain test scripts that use the algorithms you implement in lib and the tools we provide in core to control the robot and achieve tasks
+- demos: contains some example scripts, mostly for the instruction team
 
 # How this repository should be used:
-- git is a code versioning tool, and can be a powerful resource. 
+- git is a code versioning tool, and can be a powerful resource.
 - This year we will use git in a limited fashion to ease the dissemination of code.
 - So that each student can have their own individual work we are going to have you work on a fork of the repository in your own gitHub account.
 
