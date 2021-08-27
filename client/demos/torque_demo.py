@@ -17,7 +17,7 @@ def SimpleJointSpacePDController(state):
 
     kp = 10
     kd = 3
-    t = time_in_seconds()
+    t = time_in_seconds() - start
     ep = state['position'] - (center + 1/2 * sin(t))
     ed = state['velocity']
     command = -kp * ep - kd * ed
@@ -35,6 +35,7 @@ arm.untuck()
 
 center = arm.get_positions() # oscillate around this position
 ready = True
+start = time_in_seconds()
 
 # This loop keeps program alive
 

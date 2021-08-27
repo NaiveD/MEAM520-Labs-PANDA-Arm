@@ -26,9 +26,10 @@ arm.untuck()
 
 # directly command periodic setpoints for arm
 rate = rospy.Rate(1000)
+start = time_in_seconds()
 while(True):
 
-    t = time_in_seconds()
+    t = time_in_seconds() - start
     q = center + 1/2 * sin(t)
 
     # directly update position controller setpoint
