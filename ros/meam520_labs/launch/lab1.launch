@@ -2,6 +2,7 @@
 <launch>
 
   <include file="$(find meam520_labs)/launch/single.launch" />
+
   <arg name="rvizconfig" default="$(find meam520_labs)/config/lab1.rviz" />
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />

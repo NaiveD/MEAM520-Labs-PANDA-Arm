@@ -3,13 +3,62 @@
 
 Maintainers: Contact FY2021 TAs
 
-# Directory Structure:
-- lib: will contain functions implementing algorithms to solve computational problems relating to the class material, such as forward and inverse kinematics and trajectory planning
-- core: contains support code we provide to you, such as helper functions and interfaces for interacting with the robot (either simulated or real!)
-- labs: will contain test scripts that use the algorithms you implement in lib and the tools we provide in core to control the robot and achieve tasks
-- demos: contains some example scripts, mostly for the instruction team
+# Native Install Instructions (NOT REQUIRED FOR VIRTUAL MACHINE)
+---
+**NOTE**
 
-# How this repository should be used:
+These installation instructions are for the TAs when setting up the Virtual Machine, and can also be followed by experienced users to set up the lab environment on a native Ubuntu Linux installation. These steps do not need to be followed by students using the Virtual Machine. For all other users, skip to the section on forking this repo.
+
+---
+
+## panda_simulator installation
+
+To get started using this development environment, you must first follow the instructions to install [panda_simulator](https://github.com/justagist/panda_simulator), a Gazebo-based simulator for the Franka Emika Panda robot. The only difference is that you must name the catkin workspace `meam520_ws` to avoid conflicts with other projects.
+
+The instructions specify to use `catkin build`, but we recommend buildint with `catkin_make_isolated` instead.
+
+Once you've completed that installation, add
+
+```
+source ~/meam520_ws/devel_isolated/setup.bash
+```
+to your `~/.bashrc` to source the workspace. If all has been done correctly, you should be able to run
+
+```
+roslaunch panda_gazebo panda_world.launch
+```
+
+to launch the Gazebo simulation.
+
+## meam520_labs installation
+
+Now, clone this repo:
+
+```
+cd ~/meam520_ws/src
+git clone https://github.com/MEAM520/meam520_labs
+```
+
+and run `catkin_make_isolated` again.
+
+Once the build finishes, open a new terminal and run
+
+```
+roslaunch meam520_labs lab0.launch
+```
+
+To check that the installation is successful, run a demo script:
+
+```
+cd ~/meam520_ws/src/meam520_labs/client/demos
+python position_demo.py
+```
+
+You should see the robot in Gazebo moving back and forth.
+
+
+# Forking This Repo
+
 - git is a code versioning tool, and can be a powerful resource.
 - This year we will use git in a limited fashion to ease the dissemination of code.
 - So that each student can have their own individual work we are going to have you work on a fork of the repository in your own gitHub account.
