@@ -208,6 +208,9 @@ class ArmController(franka_interface.ArmInterface):
         if self._gripper:
             self._gripper.set_velocity(speed)
 
+    def neutral_position(self):
+        return np.array(list(self._params.get_neutral_pose().values()))
+
 
     ########################
     ##                    ##
@@ -336,7 +339,7 @@ class ArmController(franka_interface.ArmInterface):
         """
         Move to neutral pose (using trajectory controller)
         """
-        self.move_to_position(self._params.get_neutral_pose().values())
+        self.move_to_position(self.neutral_position())
 
     def exec_gripper_cmd(self, pos, force=None):
         """
