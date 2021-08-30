@@ -127,8 +127,11 @@ $ git clone git@github.com:<YOUR_USERNAME>/meam520_labs.git
 Note you need to replace **YOUR_USERNAME** with your GitHub username. 
 8. You should be able to type *ls* in your terminal and see a new directory created called meam520_labs*, which now points to *your* github repository.
 
-### Getting code updates from the TAs: 
-    Now we are going to make it possible for you to get updates from the TAs main repository. First it is important to understand that git is a tool which is used locally to keep a history of your code. To ensure that code is backed up to an additional location outside of your computer, and to collaborate with others, a *remote* is setup. GitHub is an example of a location which stores remote git repositories and acts as a way to backup code to a secondary location.
+### Getting code updates from the TAs:
+
+Now we are going to make it possible for you to get updates from the TAs main repository. First it is important to understand that git is a tool which is used locally to keep a history of your code.
+To ensure that code is backed up to an additional location outside of your computer, and to collaborate with others, a *remote* is setup.
+GitHub is an example of a location which stores remote git repositories and acts as a way to backup code to a secondary location.
 
 To see that sure your local git repository is setup correctly type the following command:
 ```
@@ -142,9 +145,9 @@ You should see:
 > origin  https://github.com/YOUR_USERNAME/meam520_sim.git (push)
 ```
 
-    The *origin* is the primary remote location, and this is pointing to the repository you forked to your account.
+The *origin* is the primary remote location, and this is pointing to the repository you forked to your account.
     
-    Now we are going to add additional information telling your git repository to check updates made at the original repository location (in this case where the TAs will make updates and release new projects). In git language this is called \textit{setting the remote upstream}.
+Now we are going to add additional information telling your git repository to check updates made at the original repository location (in this case where the TAs will make updates and release new projects). In git language this is called \textit{setting the remote upstream}.
 
 Do the following:
 ```
