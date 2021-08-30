@@ -1,6 +1,4 @@
 import sys
-sys.path.insert(1, '../') # necessary to find core files!
-
 import rospy
 import numpy as np
 from math import sin
