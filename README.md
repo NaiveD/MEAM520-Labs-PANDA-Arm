@@ -48,8 +48,8 @@ to launch the Gazebo simulation.
 
 Since you may be launching and killing Gazebo many times this semester, we recommend reducing the clean shutdown wait time for a better experience. Edit the file:
 ```
-cd /opt/ros/kinetic/lib/python2.7/dist-packages/roslaunch
-sudo atom nodeprocess.py
+cd /opt/ros/noetic/lib/python3/dist-packages/roslaunch
+sudo vim nodeprocess.py
 ```
 and change the lines that say
 ```
