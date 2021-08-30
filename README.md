@@ -48,7 +48,7 @@ to launch the Gazebo simulation.
 
 Since you may be launching and killing Gazebo many times this semester, we recommend reducing the clean shutdown wait time for a better experience. Edit the file:
 ```
-cd /opt/ros/kinetic/lib/python2.7/dist-packages/roslaunch
+cd /opt/ros/noetic/lib/python3/dist-packages/roslaunch
 sudo vim nodeprocess.py
 ```
 and change the lines that say
@@ -60,6 +60,7 @@ _TIMEOUT_SIGTERM = 2.0 #seconds
 ...
 ```
 to `2.0` and `1.0` respectively.
+
 
 ## Forking This Repo
 git is a code versioning tool, and can be a powerful resource. This year we will use git in a limited fashion to ease the dissemination of code. So that each student can have their own individual work we are going to have you work on a fork of the repository in your own gitHub account.
@@ -136,6 +137,13 @@ git pull upstream master
 
 This will ensure that you get updates when TAs make changes. We will add reminders any time we update the code for you to do this.
  -->
+
+
+## Update Python path to find core module
+
+Add the following line to your ~/.bashrc to allow your python scripts to find the meam520 core modules.
+
+export PYTHONPATH="${PYTHONPATH}:/home/${USER}/meam520_ws/src/meam520_labs"
 
 ## meam520_labs installation
 
