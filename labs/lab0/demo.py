@@ -9,8 +9,6 @@ Try changing the target position to see what the arm does!
 """
 
 import sys
-sys.path.insert(1, '../../') # necessary to find core files!
-
 import rospy
 import numpy as np
 from math import pi
@@ -18,7 +16,6 @@ from math import pi
 from core.interfaces import ArmController
 
 rospy.init_node('demo')
-
 
 arm = ArmController()
 arm.set_arm_speed(.2)
