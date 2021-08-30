@@ -143,7 +143,9 @@ This will ensure that you get updates when TAs make changes. We will add reminde
 
 Add the following line to your ~/.bashrc to allow your python scripts to find the meam520 core modules.
 
+```
 export PYTHONPATH="${PYTHONPATH}:/home/${USER}/meam520_ws/src/meam520_labs"
+```
 
 ## meam520_labs installation
 
