@@ -84,14 +84,14 @@ $ ssh-keygen -t ed25519 -C "your_email@seas.upenn.edu"
 $ cd ~/.ssh
 $ cat id_ed25519.pub
 ```
- -You will see a string output on the terminal starting with: "ssh-ed25519" and ending with your email.
+ - You will see a string output on the terminal starting with: "ssh-ed25519" and ending with your email.
  - In your GitHub account, under ``Settings'', select ``SSH and GPG Keys'', ``New SSH-key'', name the key and copy the entire string on your terminal into the appropriate box. (To copy things off of the terminal highlight the text and click Ctrl-Shift-C. You may also need to enable Devices > Shared Clipboard > Bidirectional in the VirtualBox toolbar.) You have now made it possible to clone your private repository to your virtual machine.
 - Note: GitHub has an educational developers pack which you are eligible for as a Penn student. To learn more about this and to register your account go to: https://education.github.com/discount_requests/student_application. To expedite this process it is important that you use your Penn email to make your account (there is a verification process). 	
 
 ### Cloning a new private repository:
-    Each of you will be making a deep copy of the TA existing repository which contains code you will use throughout the semester, e.g.  unimplemented functions, that you implement for a lab.
-    We will outline a set of steps here so that you are able to keep your code private on your own GitHub account, and get updates as the TAs make updates to the codes, e.g. as new assignments are released. 
-    The following steps allow you to copy the \texttt{meam520\_labs} code base:
+Each of you will be making a deep copy of the TA existing repository which contains code you will use throughout the semester, e.g.  unimplemented functions, that you implement for a lab.
+We will outline a set of steps here so that you are able to keep your code private on your own GitHub account, and get updates as the TAs make updates to the codes, e.g. as new assignments are released. 
+The following steps allow you to copy the *meam520_labs* code base:
     
 1. If you are not already, login to your GitHub account
 2. In your terminal do the following:
@@ -100,34 +100,35 @@ $ cd ~/meam520_ws/src
 $ git clone --bare https://github.com/MEAM520/meam520_labs.git
 ```
 This has created a bare repository of the TAs stub code, which we will refer to TA code for the remainder of the instructions. Note that you will not be using this cloned repository and you will see it appear in your src folder as meam520_labs.git.
-3. Next go to your GitHub account and in the top right corner click on your circle user icon, go down to \textit{your repositories} 
-4. At the top of the new page select New Repository, name the repository: \texttt{meam520\_labs}. This will load to a blank git repository with instructions on how to clone and add things to it, ignore these. 
+3. Next go to your GitHub account and in the top right corner click on your circle user icon, go down to *your repositories* 
+4. At the top of the new page select New Repository, name the repository: *meam520_labs*. This will load to a blank git repository with instructions on how to clone and add things to it, ignore these. 
         
-        \textbf{IMPORTANT: You MUST set your repository to Private (NOT PUBLIC), since publicly posting your assignment solutions online is a violation of Penn's Code of Academic Integrity.} 
+**IMPORTANT: You MUST set your repository to Private (NOT PUBLIC), since publicly posting your assignment solutions online is a violation of Penn's Code of Academic Integrity.**
+
 5. Next we are going to push the TA code to your newly created git repository. 
 ```
 $ cd meam520_labs.git
 $ git push --mirror git@github.com:<YOUR_USERNAME>/meam520_labs.git 
 ```
-        Note you need to replace \texttt{YOUR\_USERNAME} with your GitHub username.
-        To check that this step is executed correctly go to your GitHub account and reload your new \texttt{meam520\_labs} repository page. You should see the README and files loaded into the repository. 
+Note you need to replace **YOUR\_USERNAME** with your GitHub username.
+To check that this step is executed correctly go to your GitHub account and reload your new *meam520_labs* repository page. You should see the README and files loaded into the repository. 
 6. Now we will remove the TA repository from your machine as follows: 
 ```
 $ cd ..
 $ rm -rf meam520_labs.git
 ```    
-        Now if you type \texttt{ls} in \texttt{~/meam520\_ws/src} you should not see a directory called \texttt{meam520\_labs.git}
+        Now if you type *ls* in *~/meam520\_ws/src* you should not see a directory called *meam520\_labs.git*
 7. We will clone your new private repo as follows (you can get the link for the new repo from the top right corner in the green box labeled Code): 
 
 ```
 $ cd ~/meam520_ws/src
 $ git clone git@github.com:<YOUR_USERNAME>/meam520_labs.git
 ```
-Note you need to replace \texttt{YOUR\_USERNAME} with your GitHub username. 
-8. You should be able to type \texttt{ls} in your terminal and see a new directory created called \texttt{meam520\_labs}, which now points to \textit{your} github repository.
+Note you need to replace **YOUR_USERNAME** with your GitHub username. 
+8. You should be able to type *ls* in your terminal and see a new directory created called meam520_labs*, which now points to *your* github repository.
 
 ### Getting code updates from the TAs: 
-    Now we are going to make it possible for you to get updates from the TAs main repository. First it is important to understand that git is a tool which is used locally to keep a history of your code. To ensure that code is backed up to an additional location outside of your computer, and to collaborate with others, a \textit{remote} is setup. GitHub is an example of a location which stores remote git repositories and acts as a way to backup code to a secondary location.
+    Now we are going to make it possible for you to get updates from the TAs main repository. First it is important to understand that git is a tool which is used locally to keep a history of your code. To ensure that code is backed up to an additional location outside of your computer, and to collaborate with others, a *remote* is setup. GitHub is an example of a location which stores remote git repositories and acts as a way to backup code to a secondary location.
 
 To see that sure your local git repository is setup correctly type the following command:
 ```
@@ -141,7 +142,7 @@ You should see:
 > origin  https://github.com/YOUR_USERNAME/meam520_sim.git (push)
 ```
 
-    The \textit{origin} is the primary remote location, and this is pointing to the repository you forked to your account.
+    The *origin* is the primary remote location, and this is pointing to the repository you forked to your account.
     
     Now we are going to add additional information telling your git repository to check updates made at the original repository location (in this case where the TAs will make updates and release new projects). In git language this is called \textit{setting the remote upstream}.
 
