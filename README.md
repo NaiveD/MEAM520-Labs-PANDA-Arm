@@ -61,6 +61,13 @@ _TIMEOUT_SIGTERM = 2.0 #seconds
 ```
 to `2.0` and `1.0` respectively.
 
+## Update Python path to find core module
+
+Add the following line to your ~/.bashrc to allow your python scripts to find the meam520 core modules.
+
+export PYTHONPATH="${PYTHONPATH}:/home/${USER}/meam520_ws/src/meam520_labs"
+
+
 ## Forking This Repo
 git is a code versioning tool, and can be a powerful resource. This year we will use git in a limited fashion to ease the dissemination of code. So that each student can have their own individual work we are going to have you work on a fork of the repository in your own gitHub account.
 
