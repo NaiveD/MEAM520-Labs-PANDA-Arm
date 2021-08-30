@@ -13,7 +13,7 @@
     <physics type="ode">
       <!--
 
-        You can tweak these settings to try to improve your Real Time Factor.
+        You can tweak these settings to *try* to improve your Real Time Factor.
         Try first increasing your real_time_update_rate, and if that doesn't
         improve things then consider increasing your step size.
 
@@ -27,7 +27,7 @@
         1000 divided by the Real Time Factor gazebo reported when you first launched it.
 
       -->
-      <real_time_update_rate>1300</real_time_update_rate>
+      <real_time_update_rate>1000</real_time_update_rate>
       <max_step_size>0.001</max_step_size>
      </physics>
 
