@@ -100,7 +100,9 @@ $ cd ~/meam520_ws/src
 $ git clone --bare https://github.com/MEAM520/meam520_labs.git
 ```
 This has created a bare repository of the TAs stub code, which we will refer to TA code for the remainder of the instructions. Note that you will not be using this cloned repository and you will see it appear in your src folder as meam520_labs.git.
-3. Next go to your GitHub account and in the top right corner click on your circle user icon, go down to *your repositories* 
+
+3. Next go to your GitHub account and in the top right corner click on your circle user icon, go down to *your repositories*
+
 4. At the top of the new page select New Repository, name the repository: *meam520_labs*. This will load to a blank git repository with instructions on how to clone and add things to it, ignore these. 
         
 **IMPORTANT: You MUST set your repository to Private (NOT PUBLIC), since publicly posting your assignment solutions online is a violation of Penn's Code of Academic Integrity.**
@@ -111,20 +113,24 @@ $ cd meam520_labs.git
 $ git push --mirror git@github.com:<YOUR_USERNAME>/meam520_labs.git 
 ```
 Note you need to replace **YOUR\_USERNAME** with your GitHub username.
-To check that this step is executed correctly go to your GitHub account and reload your new *meam520_labs* repository page. You should see the README and files loaded into the repository. 
+To check that this step is executed correctly go to your GitHub account and reload your new *meam520_labs* repository page. You should see the README and files loaded into the repository.
+
 6. Now we will remove the TA repository from your machine as follows: 
 ```
 $ cd ..
 $ rm -rf meam520_labs.git
 ```    
         Now if you type *ls* in *~/meam520\_ws/src* you should not see a directory called *meam520\_labs.git*
+
 7. We will clone your new private repo as follows (you can get the link for the new repo from the top right corner in the green box labeled Code): 
 
 ```
 $ cd ~/meam520_ws/src
 $ git clone git@github.com:<YOUR_USERNAME>/meam520_labs.git
 ```
-Note you need to replace **YOUR_USERNAME** with your GitHub username. 
+
+Note you need to replace **YOUR_USERNAME** with your GitHub username.
+
 8. You should be able to type *ls* in your terminal and see a new directory created called meam520_labs*, which now points to *your* github repository.
 
 ### Getting code updates from the TAs:
