@@ -153,7 +153,7 @@ You should see:
 
 The *origin* is the primary remote location, and this is pointing to the repository you forked to your account.
     
-Now we are going to add additional information telling your git repository to check updates made at the original repository location (in this case where the TAs will make updates and release new projects). In git language this is called \textit{setting the remote upstream}.
+Now we are going to add additional information telling your git repository to check updates made at the original repository location (in this case where the TAs will make updates and release new projects). In git language this is called *setting the remote upstream*.
 
 Do the following:
 ```
