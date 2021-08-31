@@ -146,6 +146,20 @@ class ArmController(franka_interface.ArmInterface):
 
         return state
 
+    def _format_command_with_limits(self, cmd):
+
+        for (angle,limit,number) in zip(cmd,self.joint_limits(),range(7)):
+            if angle < limit['lower'] or angle > limit['upper']:
+                cmd[number] = min(limit['upper'],max(limit['lower'],angle))
+                rospy.logwarn("Position {angle:2.2f} for joint {number} violates joint limits [{lower:2.5f},{upper:2.5f}]. Constraining within range.".format(
+                    number=number,
+                    lower=limit['lower'],
+                    upper=limit['upper'],
+                    angle=angle
+                ))
+
+        return dict(zip(self.joint_names(), cmd[:7]))
+
 
     #####################
     ##                 ##
@@ -312,6 +326,7 @@ class ArmController(franka_interface.ArmInterface):
     ##                   ##
     #######################
 
+
     def move_to_position(self, joint_angles, timeout=10.0, threshold=0.00085, test=None):
         """
         Move to joint position specified (attempts to move with trajectory action client).
@@ -333,7 +348,7 @@ class ArmController(franka_interface.ArmInterface):
         :param test: optional function returning True if motion must be aborted
         """
         self.move_to_joint_positions(
-            dict(zip(self.joint_names(), joint_angles)), timeout=timeout, threshold=threshold, test=test, use_moveit=False)
+            self._format_command_with_limits(joint_angles), timeout=timeout, threshold=threshold, test=test, use_moveit=False)
 
     def untuck(self):
         """
@@ -397,16 +412,7 @@ class ArmController(franka_interface.ArmInterface):
             gripper_cmd = cmd[7:]
             self.exec_gripper_cmd(*gripper_cmd)
 
-        joint_command = dict(zip(self.joint_names(), cmd[:7]))
-
-        for (angle,limit,number) in zip(cmd,self.joint_limits(),range(7)):
-            if angle < limit['lower'] or angle > limit['upper']:
-                rospy.logwarn("Commanding position {angle:2.2f} for joint {number} violates joint limits, {lower:2.5f} <= angle <= {upper:2.5f}".format(
-                    number=number,
-                    lower=limit['lower'],
-                    upper=limit['upper'],
-                    angle=angle
-                ))
+        joint_command = self._format_command_with_limits(joint_angles)
 
         self.set_joint_positions(joint_command)
 
