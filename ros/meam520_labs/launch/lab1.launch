@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
 
-  <include file="$(find meam520_labs)/launch/single.launch" />
+  <include file="$(find meam520_labs)/launch/single.launch">
+    <arg name="headless" value="true" />
+    <arg name="gui" value="false" />
+  </include>
 
   <arg name="rvizconfig" default="$(find meam520_labs)/config/lab1.rviz" />
 
