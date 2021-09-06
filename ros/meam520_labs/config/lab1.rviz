@@ -3,8 +3,7 @@ Panels:
     Help Height: 85
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /End Effector Frame1/Status1
+      Expanded: ~
       Splitter Ratio: 0.5
     Tree Height: 744
   - Class: rviz/Selection
@@ -227,25 +226,9 @@ Visualization Manager:
       Class: rviz/Axes
       Enabled: true
       Length: 0.10000000149011612
-      Name: Target 1
+      Name: IK Target
       Radius: 0.004999999888241291
-      Reference Frame: target1
-      Value: true
-    - Alpha: 1
-      Class: rviz/Axes
-      Enabled: true
-      Length: 0.10000000149011612
-      Name: Target 2
-      Radius: 0.004999999888241291
-      Reference Frame: target2
-      Value: true
-    - Alpha: 1
-      Class: rviz/Axes
-      Enabled: true
-      Length: 0.10000000149011612
-      Name: Target 3
-      Radius: 0.004999999888241291
-      Reference Frame: target3
+      Reference Frame: target
       Value: true
   Enabled: true
   Global Options:
@@ -275,7 +258,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.4854488372802734
+      Distance: 1.5214965343475342
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -283,17 +266,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.02066008560359478
-        Y: 0.14214187860488892
-        Z: 0.4459835886955261
+        X: -0.11934570968151093
+        Y: 0.0613568052649498
+        Z: 0.39481091499328613
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6597964763641357
+      Pitch: 0.37479618191719055
       Target Frame: vehicle
-      Yaw: 1.1504052877426147
+      Yaw: 5.2835917472839355
     Saved: ~
 Window Geometry:
   Displays:

@@ -30,11 +30,11 @@ targets = [
         'theta': 0
     },
     {
-        'o': np.array([.3,.5]),
+        'o': np.array([.4,.5]),
         'theta': -pi/6
     },
     {
-        'o': np.array([.3,.5]),
+        'o': np.array([.2,.5]),
         'theta': pi/6
     }
 ]
@@ -78,14 +78,13 @@ def show_all_FK(state):
     for i in range(7):
         show_joint_position(joints,i)
 
-def show_targets():
-    # visualize IK targets
-    for i in range(3):
-        x = targets[i]['o'][0]
-        z = targets[i]['o'][1]
-        theta = targets[i]['theta']
-        T0_target = tf.transformations.translation_matrix(np.array([x,0,z])) @ tf.transformations.euler_matrix(0,theta,0)
-        show_pose(T0_target,"target" + str(i+1))
+# visualize the chosen IK target
+def show_target(target):
+    x = target['o'][0]
+    z = target['o'][1]
+    theta = target['theta']
+    T0_target = tf.transformations.translation_matrix(np.array([x,0,z])) @ tf.transformations.euler_matrix(0,theta,0)
+    show_pose(T0_target,"target")
 
 #####################
 ##  Test Execution ##
@@ -94,29 +93,30 @@ def show_targets():
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print("usage:\n\tpython visualize.py FK\npython visualize.py IK <target>")
+        print("usage:\n\tpython visualize.py FK\npython visualize.py IK")
         exit()
 
     arm = ArmController(on_state_callback=show_all_FK)
-    show_targets()
 
     if sys.argv[1] == 'FK':
 
         # TODO: try different configurations!
         # pick a random configuration near the neutral configuration
         q = arm.neutral_position() + 2 * (np.random.rand(7) - .5)
+        arm.move_to_position(q)
 
     elif sys.argv[1] == 'IK':
 
-        if len(sys.argv) < 3:
-            print("must supply a target index")
-            exit()
-        target_index = sys.argv[2]
-        solutions = ik.panda_ik(targets[int(target_index) - 1])
-        q = solutions[0,:]
-
+        # Iterates through the given targets, using your IK solution
+        # Try editing the targets list above to do more testing!
+        for i, target in enumerate(targets):
+            print("Moving to target " + str(i) + "...")
+            show_target(target)
+            solutions = ik.panda_ik(target)
+            q = solutions[0,:]
+            arm.move_to_position(q)
+            if i < len(targets) - 1:
+                input("Press Enter to continue...")
     else:
         print("invalid option")
         exit()
-
-    arm.move_to_position(q)
