@@ -30,11 +30,11 @@ targets = [
         'theta': 0
     },
     {
-        'o': np.array([.4,.5]),
+        'o': np.array([.3,.2]),
         'theta': -pi/6
     },
     {
-        'o': np.array([.2,.5]),
+        'o': np.array([.3,.7]),
         'theta': pi/6
     }
 ]
@@ -116,7 +116,7 @@ if __name__ == "__main__":
             q = solutions[0,:]
             arm.move_to_position(q)
             if i < len(targets) - 1:
-                input("Press Enter to continue...")
+                input("Press Enter to move to next target...")
     else:
         print("invalid option")
         exit()
