@@ -8,9 +8,7 @@ import geometry_msgs.msg
 from calculateFK import FK
 from core.interfaces import ArmController
 
-
 rospy.init_node("visualizer")
-
 fk = FK()
 tf_broad  = tf.TransformBroadcaster()
 point_pubs = [
@@ -18,17 +16,25 @@ point_pubs = [
     for i in range(7)
 ]
 
+#########################
+##  RViz Communication ##
+#########################
+
+# Publishes the position of a given joint on the corresponding topic
 def show_joint_position(joints,i):
     msg = geometry_msgs.msg.PointStamped()
     msg.header.stamp = rospy.Time.now()
     msg.header.frame_id = 'world'
+    # mm to m conversion
     msg.point.x = joints[i,0]/1e3
     msg.point.y = joints[i,1]/1e3
     msg.point.z = joints[i,2]/1e3
     point_pubs[i].publish(msg)
 
+# Broadcasts a T0e as the transform from given frame to world frame
 def show_pose(T0e,frame):
     tf_broad.sendTransform(
+        # mm to m conversion
         tf.transformations.translation_from_matrix(T0e) / 1e3,
         tf.transformations.quaternion_from_matrix(T0e),
         rospy.Time.now(),
@@ -36,18 +42,18 @@ def show_pose(T0e,frame):
         "world"
     )
 
+# Uses the above methods to visualize the full results of your FK
 def show_all_FK(state):
-
     q = np.zeros(8)
     q[0:7] = state['position']
-
     joints, T0e = fk.forward(q)
-
-    # visualize FK
     show_pose(T0e,"endeffector")
     for i in range(7):
         show_joint_position(joints,i)
 
+#####################
+##  Test Execution ##
+#####################
 
 if __name__ == "__main__":
 
@@ -60,4 +66,7 @@ if __name__ == "__main__":
         target[0:3,3] = np.array([500,200 * i,500 + 150 * i])
         show_pose(target,"target" + str(i+1))
 
-    arm.move_to_position(arm.neutral_position() + 2 * (np.random.rand(7) - .5))
+    # pick a random configuration near the neutral configuration
+    q = arm.neutral_position() + 2 * (np.random.rand(7) - .5)
+    # go there
+    arm.move_to_position(q)
