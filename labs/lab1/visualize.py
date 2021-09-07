@@ -26,16 +26,20 @@ ik = PlanarIK()
 
 targets = [
     {
-        'o': np.array([.3,.5]),
+        'o': np.array([0.1, 0.8]),
         'theta': 0
     },
     {
-        'o': np.array([.3,.2]),
-        'theta': -pi/6
+        'o': np.array([.4, .6]),
+        'theta': pi/4
     },
     {
-        'o': np.array([.3,.7]),
-        'theta': pi/6
+        'o': np.array([0.4, -0.4]),
+        'theta': pi/2+0.2
+     },
+    {
+        'o': np.array([.1, .3]),
+        'theta': 5 * pi/4
     }
 ]
 
