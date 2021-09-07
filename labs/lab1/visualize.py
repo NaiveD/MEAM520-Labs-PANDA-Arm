@@ -105,8 +105,9 @@ if __name__ == "__main__":
     if sys.argv[1] == 'FK':
 
         # TODO: try different configurations!
-        # pick a random configuration near the neutral configuration
-        q = arm.neutral_position() + 2 * (np.random.rand(7) - .5)
+        q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
+
+        print(q)
         arm.move_to_position(q)
 
     elif sys.argv[1] == 'IK':
