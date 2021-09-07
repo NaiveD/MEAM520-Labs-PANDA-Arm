@@ -87,7 +87,7 @@ def show_target(target):
     x = target['o'][0]
     z = target['o'][1]
     theta = target['theta']
-    T0_target = tf.transformations.translation_matrix(np.array([x,0,z])) @ tf.transformations.euler_matrix(0,theta,0)
+    T0_target = tf.transformations.translation_matrix(np.array([x,0,z])) @ tf.transformations.euler_matrix(0,-theta-pi/2,pi)
     show_pose(T0_target,"target")
 
 #####################
