@@ -4,6 +4,7 @@
   <include file="$(find meam520_labs)/launch/single.launch">
     <arg name="headless" value="true" />
     <arg name="gui" value="false" />
+    <arg name="world" value="$(find meam520_labs)/worlds/lab1.world" />
   </include>
 
   <arg name="rvizconfig" default="$(find meam520_labs)/config/lab1.rviz" />
