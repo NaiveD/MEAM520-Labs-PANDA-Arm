@@ -1,4 +1,5 @@
 import numpy as np
+from math import pi
 
 class FK():
 
@@ -34,3 +35,15 @@ class FK():
         return jointPositions, T0e
 
     # feel free to define additional helper methods to modularize your solution
+
+if __name__ == "__main__":
+
+    fk = FK()
+
+    # matches figure in the handout
+    q = np.array([0,0,0,-pi/2,0,pi/2,pi/4])
+
+    joint_positions, T0e = fk.forward(q)
+    
+    print("Joint Positions:\n",joint_positions)
+    print("End Effector Pose:\n",T0e)
