@@ -20,8 +20,8 @@ limits = [
 # TODO: create plot(s) which visualize the reachable workspace of the Panda arm,
 # accounting for the joint limits.
 #
-# We've included some very basic plotting commands below, but you can research
-# other options at https://matplotlib.org/stable/index.html
+# We've included some very basic plotting commands below, but you can find
+# more functionality at https://matplotlib.org/stable/index.html
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')

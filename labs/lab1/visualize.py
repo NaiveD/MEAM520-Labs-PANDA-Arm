@@ -51,8 +51,7 @@ def show_pose(T0e,frame):
 
 # Uses the above methods to visualize the full results of your FK
 def show_all_FK(state):
-    q = np.zeros(8)
-    q[0:7] = state['position']
+    q = state['position']
     joints, T0e = fk.forward(q)
     show_pose(T0e,"endeffector")
     for i in range(7):
