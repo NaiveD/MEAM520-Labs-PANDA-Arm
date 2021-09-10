@@ -10,8 +10,8 @@ import geometry_msgs.msg
 
 from core.interfaces import ArmController
 
-from calculateFK import FK
-from PlanarIK import PlanarIK
+from lib.calculateFK import FK
+from lib.PlanarIK import PlanarIK
 
 rospy.init_node("visualizer")
 

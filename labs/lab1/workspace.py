@@ -1,4 +1,4 @@
-from calculateFK import FK
+from lib.calculateFK import FK
 from core.interfaces import ArmController
 
 import matplotlib.pyplot as plt
