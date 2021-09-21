@@ -412,7 +412,7 @@ class ArmController(franka_interface.ArmInterface):
             gripper_cmd = cmd[7:]
             self.exec_gripper_cmd(*gripper_cmd)
 
-        joint_command = self._format_command_with_limits(joint_angles)
+        joint_command = self._format_command_with_limits(cmd)
 
         self.set_joint_positions(joint_command)
 
