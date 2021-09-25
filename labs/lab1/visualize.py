@@ -101,6 +101,14 @@ targets = [
     {
         'o': np.array([.1, .3]),
         'theta': 5 * pi/4
+    },
+    {
+        'o': np.array([0.5, -0.3]),
+        'theta': pi/2+0.3
+    },
+    {
+        'o': np.array([0, 0.5]),
+        'theta': pi/2
     }
 ]
 
