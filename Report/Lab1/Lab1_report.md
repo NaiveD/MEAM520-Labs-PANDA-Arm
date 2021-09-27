@@ -10,25 +10,22 @@
 
 (TODO)
 
-<img src="formulation.jpeg" width="300">
-
 ### FK
 
 (TODO)
 
 ### IK
 
-Use geometric approach:
-
-* Draw the schematic of 2 solutions and define intermediate angles and edges as follow:
-
-    <img src="form_IK1.jpeg" width="200">
-    <img src="form_IK2.jpeg" width="200">
-
 * Compute position of $O_2 (x_2, y_2)$
 * Compute $d_2, d_e, \phi_2$
-* Compute all the needed angles using law of cosine with known $a_1, a_2, a_3, d_2, d_e$
-* Compute $\theta_1, \theta_2, \theta_3$ with the intermediate angles
+* Draw the elbow-up and elbow-down solutions
+  * Compute intermediate angles $t_{11}, t_2$ using law of cosines
+  * Compute $\theta_1, \theta_2$ for each solution using the intermediate $\phi_2, t_{11}, t_2$:
+
+    <img src="IK-elbowup.jpeg" width="200">
+    <img src="IK-elbowdown.jpeg" width="200">
+
+* Compute $\theta_3 = \theta_e - \theta_1 - \theta_2$
 
 ## Evaluation
 
@@ -37,6 +34,8 @@ Use geometric approach:
 (TODO)
 
 ### IK
+
+If the end effector can reach the target with desired position and orientation, then the IK solution is correct. 
 
 #### Target 1
 ```python
