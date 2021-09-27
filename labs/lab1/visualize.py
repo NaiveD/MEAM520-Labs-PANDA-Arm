@@ -87,33 +87,34 @@ configurations = [
 
 targets = [
     {
-        'o': np.array([0.1, 0.8]),
+        'o': np.array([0.4, 1.0]),
         'theta': 0
     },
-    {
-        'o': np.array([.4, .6]),
-        'theta': pi/4
-    },
-    {
-        'o': np.array([0.4, -0.4]),
-        'theta': pi/2+0.2
-     },
-    {
-        'o': np.array([.1, .3]),
-        'theta': 5 * pi/4
-    },
-    {
-        'o': np.array([0.5, -0.3]),
-        'theta': pi/2+0.3
-    },
-    {
-        'o': np.array([0, 0.5]),
-        'theta': pi/2
-    },
-    {
-        'o': np.array([0.5, 0.5]),
-        'theta': pi/2
-    },
+    # {
+    #     'o': np.array([.4, .6]),
+    #     'theta': pi/4
+    # },
+    # {
+    #     'o': np.array([0.4, -0.4]),
+    #     'theta': pi/2+0.2
+    #  },
+    # {
+    #     'o': np.array([.1, .3]),
+    #     'theta': 5 * pi/4
+    # },
+    
+    # { # IK target 1
+    #     'o': np.array([0.5, -0.3]),
+    #     'theta': pi/2+0.3
+    # },
+    # { # IK target 2
+    #     'o': np.array([0, 0.5]),
+    #     'theta': pi/2
+    # },
+    # { # IK target 3
+    #     'o': np.array([0.5, 0.5]),
+    #     'theta': 1/4 * pi
+    # },
 ]
 
 ####################
@@ -149,6 +150,7 @@ if __name__ == "__main__":
             show_target(target)
             solutions = ik.panda_ik(target)
             q = solutions[0,:] # choose the first of multiple solutions
+            # q = solutions[1,:] # choose the second of multiple solutions            
             arm.move_to_position(q)
             if i < len(targets) - 1:
                 input("Press Enter to move to next target...")

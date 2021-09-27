@@ -110,31 +110,33 @@ class PlanarIK:
         y_e = target['o'][1]
         theta_e = target['theta']
 
-        d_e = (x_e**2 + y_e**2) ** 0.5
+        d_e = math.sqrt(x_e**2 + y_e**2)
 
         # For Joint 2
         x_2 = x_e - math.cos(theta_e) * a3
         y_2 = y_e - math.sin(theta_e) * a3
-        d_2 = (x_2**2 + y_2**2) ** 0.5
+
+        print("x_2 = %f, y_2 = %f" % (x_2,y_2))
+
+        d_2 = math.sqrt(x_2**2 + y_2**2)
         phi_2 = math.atan2(y_2, x_2)
 
-        t11 = math.acos((a1**2 + d_2**2 - a2**2) / (2 * a1 * d_2))
+        t11 = math.acos((a1**2 + d_2**2 - a2**2) / (2 * a1 * d_2)) # angle between a1 and d2
 
-        t2 = -(pi - math.acos((a1**2 + a2**2 - d_2**2) / (2 * a1 * a2)))
+        t2 = math.acos((a1**2 + a2**2 - d_2**2) / (2 * a1 * a2)) # angle between a1 and a2
 
-        t31 = math.acos((a2**2 + d_2**2 - a1**2) / (2 * a2 * d_2))
-        t32 = math.acos((a3**2 + d_2**2 - d_e**2) / (2 * a3 * d_2))
+        t31 = math.acos((a2**2 + d_2**2 - a1**2) / (2 * a2 * d_2)) # angle between d2 and a2
+        t32 = math.acos((a3**2 + d_2**2 - d_e**2) / (2 * a3 * d_2)) # angle between d2 and a3
 
         # Get IK solution 1
         q1_a = phi_2 + t11
-        q2_a = t2
+        q2_a = -(pi - t2)
         q3_a = -(pi - (t31 + t32))
-
 
         # Get IK solution 2
         q1_b = phi_2 - t11
-        q2_b = t2
-        q2_b = -(pi - (t32 - t31))
+        q2_b = pi - t2
+        q3_b = pi - (t32 - t31)
 
         return np.array([[q1_a, q2_a, q3_a], [q1_b, q2_b, q3_b]])
 
