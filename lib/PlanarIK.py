@@ -12,7 +12,7 @@ class PlanarIK:
     l0 = 0.333  # length of link from j0 to j1
     l1 = 0.316  # length of link from j1 to j3
     l3 = 0.384  # length of link from j1 to j5
-    l5 = 0.107 + 0.11 # length of link from j5 to gripper point
+    l5 = 0.107 + 0.103 # length of link from j5 to gripper point
 
     # angle offsets due to non straight link
     j1_offset = np.arctan(-offset / l1)
@@ -116,8 +116,6 @@ class PlanarIK:
         x_2 = x_e - math.cos(theta_e) * a3
         y_2 = y_e - math.sin(theta_e) * a3
 
-        print("x_2 = %f, y_2 = %f" % (x_2,y_2))
-
         d_2 = math.sqrt(x_2**2 + y_2**2)
         phi_2 = math.atan2(y_2, x_2)
 
@@ -125,18 +123,20 @@ class PlanarIK:
 
         t2 = math.acos((a1**2 + a2**2 - d_2**2) / (2 * a1 * a2)) # angle between a1 and a2
 
-        t31 = math.acos((a2**2 + d_2**2 - a1**2) / (2 * a2 * d_2)) # angle between d2 and a2
-        t32 = math.acos((a3**2 + d_2**2 - d_e**2) / (2 * a3 * d_2)) # angle between d2 and a3
+        # t31 = math.acos((a2**2 + d_2**2 - a1**2) / (2 * a2 * d_2)) # angle between d2 and a2
+        # t32 = math.acos((a3**2 + d_2**2 - d_e**2) / (2 * a3 * d_2)) # angle between d2 and a3
 
         # Get IK solution 1
         q1_a = phi_2 + t11
         q2_a = -(pi - t2)
-        q3_a = -(pi - (t31 + t32))
+        # q3_a = -(pi - (t31 + t32))
+        q3_a = theta_e - q1_a  - q2_a
 
         # Get IK solution 2
         q1_b = phi_2 - t11
         q2_b = pi - t2
-        q3_b = pi - (t32 - t31)
+        # q3_b = - (pi - (t32 - t31))
+        q3_b = theta_e - q1_b  - q2_b
 
         return np.array([[q1_a, q2_a, q3_a], [q1_b, q2_b, q3_b]])
 

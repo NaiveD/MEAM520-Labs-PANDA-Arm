@@ -87,34 +87,30 @@ configurations = [
 
 targets = [
     {
-        'o': np.array([0.4, 1.0]),
-        'theta': 0
+        'o': np.array([.4, .6]),
+        'theta': pi/4
     },
-    # {
-    #     'o': np.array([.4, .6]),
-    #     'theta': pi/4
-    # },
-    # {
-    #     'o': np.array([0.4, -0.4]),
-    #     'theta': pi/2+0.2
-    #  },
-    # {
-    #     'o': np.array([.1, .3]),
-    #     'theta': 5 * pi/4
-    # },
+    {
+        'o': np.array([0.4, -0.4]),
+        'theta': pi/2+0.2
+     },
+    {
+        'o': np.array([.1, .3]),
+        'theta': 5 * pi/4
+    },
     
-    # { # IK target 1
-    #     'o': np.array([0.5, -0.3]),
-    #     'theta': pi/2+0.3
-    # },
-    # { # IK target 2
-    #     'o': np.array([0, 0.5]),
-    #     'theta': pi/2
-    # },
-    # { # IK target 3
-    #     'o': np.array([0.5, 0.5]),
-    #     'theta': 1/4 * pi
-    # },
+    { # IK target 1
+        'o': np.array([0.5, -0.3]),
+        'theta': pi/2+0.3
+    },
+    { # IK target 2
+        'o': np.array([0, 0.5]),
+        'theta': pi/2
+    },
+    { # IK target 3
+        'o': np.array([0.5, 0.5]),
+        'theta': 1/4 * pi
+    },
 ]
 
 ####################
