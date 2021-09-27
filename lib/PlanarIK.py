@@ -131,12 +131,14 @@ class PlanarIK:
         q2_a = -(pi - t2)
         # q3_a = -(pi - (t31 + t32))
         q3_a = theta_e - q1_a  - q2_a
+        # print(-(pi - (t31 + t32)), q3_a)
 
         # Get IK solution 2
         q1_b = phi_2 - t11
         q2_b = pi - t2
         # q3_b = - (pi - (t32 - t31))
         q3_b = theta_e - q1_b  - q2_b
+        # print(- (pi - (t32 - t31)), q3_b)
 
         return np.array([[q1_a, q2_a, q3_a], [q1_b, q2_b, q3_b]])
 
