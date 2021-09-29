@@ -29,6 +29,21 @@ class JacobianDemo():
     ##################
 
     def eight(t,fx=1,fy=2,rx=.15,ry=.1):
+        """
+        Calculate the position and velocity of the figure 8 trajector
+
+        Inputs:
+        t - time in sec since start
+        fx - frequecny in rad/s of the x portion
+        fy - frequency in rad/s of the y portion
+        rx - radius in m of the x portion
+        ry - radius in m of the y portion
+
+        Outputs:
+        xdes = 0x3 np array of target end effector position in the world frame
+        vdes = 0x3 np array of target end effector linear velocity in the world frame
+        """
+
         # Lissajous Curve
         x0 = np.array([0.307, 0, 0.487]) # corresponds to neutral position
         xdes = x0 + np.array([rx*sin(fx*t),ry*sin(fy*t),0])
@@ -36,6 +51,20 @@ class JacobianDemo():
         return xdes, vdes
 
     def ellipse(t,f=1,ry=.15,rz=.15):
+        """
+        Calculate the position and velocity of the figure ellipse trajector
+
+        Inputs:
+        t - time in sec since start
+        f - frequecny in rad/s of the trajectory
+        rx - radius in m of the x portion
+        ry - radius in m of the y portion
+
+        Outputs:
+        xdes = 0x3 np array of target end effector position in the world frame
+        vdes = 0x3 np array of target end effector linear velocity in the world frame
+        """
+
         x0 = np.array([0.307, 0, 0.487]) # corresponds to neutral position
 
         ## STUDENT CODE GOES HERE
@@ -49,7 +78,18 @@ class JacobianDemo():
         return xdes, vdes
 
     def line(t,f=1,L=.2):
+        """
+        Calculate the position and velocity of the line trajector
 
+        Inputs:
+        t - time in sec since start
+        f - frequecny in Hz of the line trajectory
+        L - length of the line in meters
+        
+        Outputs:
+        xdes = 0x3 np array of target end effector position in the world frame
+        vdes = 0x3 np array of target end effector linear velocity in the world frame
+        """
         ## STUDENT CODE GOES HERE
 
         # TODO: replace these!
