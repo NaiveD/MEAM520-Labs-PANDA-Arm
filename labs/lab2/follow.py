@@ -154,7 +154,7 @@ class JacobianDemo():
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print("usage:\n\tpython jacobianDemo.py line\n\tpython jacobianDemo.py circle\n\tpython jacobianDemo.py eight")
+        print("usage:\n\tpython jacobianDemo.py line\n\tpython jacobianDemo.py ellipse\n\tpython jacobianDemo.py eight")
         exit()
 
     rospy.init_node("follower")
@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
     if sys.argv[1] == 'line':
         callback = lambda state : JD.follow_trajectory(state, JacobianDemo.line)
-    elif sys.argv[1] == 'circle':
+    elif sys.argv[1] == 'ellipse':
         callback = lambda state : JD.follow_trajectory(state, JacobianDemo.ellipse)
     elif sys.argv[1] == 'eight':
         callback = lambda state : JD.follow_trajectory(state, JacobianDemo.eight)
