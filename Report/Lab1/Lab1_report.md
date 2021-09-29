@@ -31,7 +31,19 @@
 
 ### FK
 
-(TODO)
+If the joint points and end effector frame are glued to the robot as it moves, then the FK solution is correct
+
+#### Config 1
+`np.array([ 0,    0, -pi/3, -pi/3,  pi/3, pi,   pi/3 ])`
+<img src="FK1.png" width="500">
+    
+#### Config 2
+`np.array([ 0,    0, pi/3, pi/3,  pi/3, pi,   pi/3 ])`
+<img src="FK2.png" width="500">
+    
+#### Config 3
+`np.array([ 0,    0, -pi/3, -pi/6,  0, pi,   pi/3 ])`
+<img src="FK3.png" width="500">
 
 ### IK
 
@@ -68,11 +80,6 @@ If the end effector can reach the target with desired position and orientation, 
 
 ### Gravity
 
-#### FK
-(TODO)
-
-#### IK
-
 With gravity, the manipulator tends to move faster and will have a little shake when reaching the target. The final posiiton of the end effector might be a little below the target.
 
 <img src="Gravity_IK.png" width="500">
@@ -85,4 +92,4 @@ The reason might be with gravity, the joints cannot reach the exact computed val
 
 ### Extending Inverse Kinematics to 3D
 
-Panda does have a spherical wrist. However, kinematic decoupling does not work on the full Panda robot because it has 7 dofs, and you have to solve the first 4 joint variables with only 3 equations (the position of the wrist center). The appropriate way I can think of is to use geometric approach to solve the first 4 joint variables, and then the 3 joint variables of the wrist can be solved using Euler angles. 
+Panda does have a spherical wrist. However, kinematic decoupling does not work on the full Panda robot because it has 7 dofs, and you have to solve the first 4 joint variables with only 3 equations (the position of the wrist center). The appropriate way I can think of is to use geometric approach to solve the first 4 joint variables, and then the 3 joint variables of the wrist can be solved using Euler angles. The challenge with the 7 dof arm is that both numerical and geometric approach will be more complicated because of the one more redundant dof, and methods like kinematic decoupling will be inapplicable.
