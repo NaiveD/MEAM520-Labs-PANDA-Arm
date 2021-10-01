@@ -106,7 +106,8 @@ class FK():
         T_45 = self.xRotTransformation(q[4], lx[4], 0, l[4])
         T_56 = self.yRotTransformation((-q[5]+(pi/2)), lx[5], ly, l[5])
         T_67 = self.zRotTransformation((-q[6]+(pi/4)), lx[6], -ly, l[6])
-        T_7E = self.yRotTransformation(pi / 2, 0, 0, l[7])
+        T_7E = self.yRotTransformation(pi, 0, 0, l[7])
+        T_7E2 = self.zRotTransformation(pi, 0, 0, 0)
 
         # Finding each joint position
         jointPositions = np.zeros((7, 3))
@@ -140,7 +141,7 @@ class FK():
         pos = np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(T_B1, T_12), T_23), T_34), T_45), T_56), T_67), pos_vec)
         jointPositions[6, :] = pos[0, 0:3]
 
-        T0e = np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(T_B1, T_12), T_23), T_34), T_45), T_56), T_67), T_7E)
+        T0e = np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(T_B1, T_12), T_23), T_34), T_45), T_56), T_67), T_7E),T_7E2)
 
         # Your code ends here
 
