@@ -13,6 +13,9 @@ def calcJacobian(q):
     J = np.zeros((6, 7))
 
     ## STUDENT CODE GOES HERE
+    # Linear velocity
+    
+
 
     return J
 
