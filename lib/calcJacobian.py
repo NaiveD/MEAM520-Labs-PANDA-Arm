@@ -118,20 +118,21 @@ def calcJacobian(q):
 
     # Calculate Jacobian
     J = np.zeros((6, 7))
-    for i in range(len(T)):
+    for i in range(len(T)-1):
         if (i == 0):
-            o = np.subtract(T[7][0:3, 3], np.array([0, 0, 0]))
-            print(T[7][0:3, 3])
-            print(np.array([0, 0, 0]))
+            o = np.subtract(T[7][0:3, 3], np.matrix([0, 0, 0]))
+            print(T[7][0:3, 3].ndim)
+            # print(T[7][0:3, 3])
+            # print(np.array([0, 0, 0]))
         else: 
             o = np.subtract(T[7][0:3, 3], T[i-1][0:3, 3])
-            print(T[7][0:3, 3])
-            print(T[i-1][0:3, 3])
+            # print(T[7][0:3, 3])
+            # print(T[i-1][0:3, 3])
 
-        print(axis[i].shape)
-        print(o.shape)
-        print(axis[i])
-        print(o)
+        # print(axis[i].shape)
+        # print(o.shape)
+        # print(axis[i])
+        # print(o)
         j_vec = np.cross(axis[i], o)
 
         # print(np.shape(j_vec))
