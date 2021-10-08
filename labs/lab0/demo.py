@@ -41,8 +41,33 @@ arm.open_gripper()
 q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
 arm.move_to_position(q)
 
-# Test for joint 1 to see the relationship with theta_0
-q = np.array([pi/4, 0, 0, -pi/2, 0, pi/2, pi/4])
-arm.move_to_position(q)
+# # Test to see the relationship between q[0] and theta_1
+# q = np.array([0 + pi/4, 0, 0, -pi/2, 0, pi/2, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[1] and theta_2
+# q = np.array([0, 0 + pi/4, 0, -pi/2, 0, pi/2, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[2] and theta_3
+# q = np.array([0, 0, 0 + pi/4, -pi/2, 0, pi/2, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[3] and theta_4
+# q = np.array([0, 0, 0, -pi/2 + pi/4, 0, pi/2, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[4] and theta_5
+# q = np.array([0, 0, 0, -pi/2, 0 + pi/4, pi/2, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[5] and theta_6
+# q = np.array([0, 0, 0, -pi/2, 0, pi/2 + pi/4, pi/4])
+# arm.move_to_position(q)
+
+# # Test to see the relationship between q[6] and theta_7
+# q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4 + pi/4])
+# arm.move_to_position(q)
+
 
 arm.close_gripper()
