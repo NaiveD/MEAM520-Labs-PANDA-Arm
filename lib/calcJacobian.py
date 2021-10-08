@@ -111,19 +111,38 @@ def calcJacobian(q):
     T.append(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(T_B1, T_12), T_23), T_34), T_45), T_56), T_67),T_7E), T_7E2))
 
     #Axis of rotation
-    x = np.matrix([[1], [0], [0]])
-    y = np.matrix([[0], [1], [0]])
-    z = np.matrix([[0], [0], [1]])
+    x = np.array([1, 0, 0])
+    y = np.array([0, 1, 0])
+    z = np.array([0, 0, 1])
     axis = [z, y, z, y, x, y, z]
 
     # Calculate Jacobian
     J = np.zeros((6, 7))
-    for i in range(len(T)-1):
-        o = np.subtract(T[7][0:3, 3], T[i][0:3, 3])
-        j_vec = np.subtract(axis[i], o)
+    for i in range(len(T)):
+        if (i == 0):
+            o = np.subtract(T[7][0:3, 3], np.array([0, 0, 0]))
+            print(T[7][0:3, 3])
+            print(np.array([0, 0, 0]))
+        else: 
+            o = np.subtract(T[7][0:3, 3], T[i-1][0:3, 3])
+            print(T[7][0:3, 3])
+            print(T[i-1][0:3, 3])
+
+        print(axis[i].shape)
+        print(o.shape)
+        print(axis[i])
+        print(o)
+        j_vec = np.cross(axis[i], o)
+
         # print(np.shape(j_vec))
-        J[0:3, i] = j_vec.reshape((3,))
-        J[3:6, i] = axis[i].reshape((3,))
+        J[0:3, i] = j_vec
+        
+        if (i == 0):
+            J[3:6, i] = axis[i]
+        else:
+            R = T[i-1][:3, :3]
+            J[3:6, i] = np.matmul(R, axis[i])
+
     return J
 
 if __name__ == '__main__':
