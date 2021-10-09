@@ -20,6 +20,7 @@ def zRotTransformation(a, x, y, z):
          [0, 0, 1, z],
          [0, 0, 0, 1]])
 
+
 def yRotTransformation(a, x, y, z):
     '''
         Generate transformation matrix for homogenous y-axis rotations with y and z translation
@@ -52,6 +53,7 @@ def xRotTransformation(a, x, y, z):
          [0, math.cos(a), -math.sin(a), y],
          [0, math.sin(a), math.cos(a), z],
          [0, 0, 0, 1]])
+
 
 def calcJacobian(q):
     """
@@ -110,7 +112,7 @@ def calcJacobian(q):
     # End Effector
     T.append(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(np.matmul(T_B1, T_12), T_23), T_34), T_45), T_56), T_67),T_7E), T_7E2))
 
-    #Axis of rotation
+    # Axis of rotation
     x = np.array([1, 0, 0])
     y = np.array([0, 1, 0])
     z = np.array([0, 0, 1])
@@ -138,6 +140,7 @@ def calcJacobian(q):
             J[3:6, i] = np.matmul(R, axis[i])
 
     return J
+
 
 if __name__ == '__main__':
     q= np.array([0, 0, 0, -np.pi/2, 0, np.pi/2, np.pi/4])

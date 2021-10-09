@@ -20,4 +20,6 @@ def IK_velocity(q_in, v_in, omega_in):
 
     dq = np.zeros(7)
 
+    
+
     return dq
