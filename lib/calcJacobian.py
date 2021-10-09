@@ -116,11 +116,10 @@ def calcJacobian(q):
     y = np.array([0, 1, 0])
     z = np.array([0, 0, 1])
     axis = [z, y, z, -y, x, -y, -z]
-    # axis = [z, z, z, z, z, z, z]
 
     # Calculate Jacobian
     J = np.zeros((6, 7))
-    for i in range(len(T)-1):
+    for i in range(7):
         o = np.subtract(T[7][0:3, 3], T[i][0:3, 3])
         o = o.flatten()
         j_vec = np.cross(axis[i], o)
@@ -128,8 +127,6 @@ def calcJacobian(q):
 
         # Calculates Angular Velocity
         R = T[i][:3, :3]
-        # print(R)
-        # print(np.matmul(R, axis[i]))
         J[3:6, i] = np.matmul(R, axis[i])
 
     return J
