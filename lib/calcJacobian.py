@@ -89,6 +89,7 @@ def calcJacobian(q):
     T_45 = xRotTransformation(q[4], lx[4], 0, l[4])
     T_56 = yRotTransformation((-q[5] + (pi / 2)), lx[5], ly, l[5])
     T_67 = zRotTransformation((-q[6] + (pi / 4)), lx[6], -ly, l[6])
+    # Two tranformation matrices to rotate the coordinate frame around the y and z axis to match desired end-effector frame
     T_7E = yRotTransformation(pi, 0, 0, l[7])
     T_7E2 = zRotTransformation(pi, 0, 0, 0)
 
@@ -116,32 +117,28 @@ def calcJacobian(q):
     x = np.array([1, 0, 0])
     y = np.array([0, 1, 0])
     z = np.array([0, 0, 1])
-    axis = [z, y, z, y, x, y, z]
+    axis = [z, y, z, -y, x, -y, -z]
+    # axis = [z, z, z, z, z, z, z]
 
     # Calculate Jacobian
     J = np.zeros((6, 7))
     for i in range(len(T)-1):
-        if (i == 0):
-            o = np.subtract(T[7][0:3, 3], np.array([[0], [0], [0]]))
-        else: 
-            o = np.subtract(T[7][0:3, 3], T[i-1][0:3, 3])
-
+        o = np.subtract(T[7][0:3, 3], T[i][0:3, 3])
         o = o.flatten()
-
         j_vec = np.cross(axis[i], o)
-
-        # print(np.shape(j_vec))
         J[0:3, i] = j_vec
-        
-        if (i == 0):
-            J[3:6, i] = axis[i]
-        else:
-            R = T[i-1][:3, :3]
-            J[3:6, i] = np.matmul(R, axis[i])
+
+        # Calculates Angular Velocity
+        R = T[i][:3, :3]
+        # print(R)
+        # print(np.matmul(R, axis[i]))
+        J[3:6, i] = np.matmul(R, axis[i])
 
     return J
 
 
 if __name__ == '__main__':
     q= np.array([0, 0, 0, -np.pi/2, 0, np.pi/2, np.pi/4])
+
+    # q = np.array([0, 0, 0, 0, 0, 0, 0])
     print(np.round(calcJacobian(q),3))
