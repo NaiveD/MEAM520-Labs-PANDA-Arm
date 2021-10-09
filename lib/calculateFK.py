@@ -147,8 +147,6 @@ class FK():
         return jointPositions, T0e
 
 
-
-
 if __name__ == "__main__":
     fk = FK()
 
