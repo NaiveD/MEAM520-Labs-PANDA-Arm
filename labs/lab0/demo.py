@@ -35,11 +35,12 @@ arm.open_gripper()
 # q = np.array([0, 1.2, 0, 1.1, 0, 2, 0]) # Configuration 5
 
 # Zero Configuration
-# q = np.array([0, 0, 0, 0, 0, 0, 0])
-
-# Configuration in Lab 1 instructions
-q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
+q = np.array([0, 0, 0, 0, 0, 0, 0])
 arm.move_to_position(q)
+
+# # Configuration in Lab 1 instructions
+# q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
+# arm.move_to_position(q)
 
 # # Test to see the relationship between q[0] and theta_1
 # q = np.array([0 + pi/4, 0, 0, -pi/2, 0, pi/2, pi/4])
