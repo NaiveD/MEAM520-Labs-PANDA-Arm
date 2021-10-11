@@ -15,11 +15,18 @@ def IK_velocity(q_in, v_in, omega_in):
          and omega have multiple solutions, then you should select the solution
          that minimizes the l2 norm of dq
     """
+    #Calculate Jacobian
+    J = calcJacobian(q_in.flatten())
 
-    ## STUDENT CODE GOES HERE
+    #Calculate xi
+    xi = np.concatenate((v_in, omega_in), axis=0)
 
-    dq = np.zeros(7)
+    #Remove unconstrained rows
+    ind = ~np.isnan(xi)
+    xi = xi[ind]
+    J = J[ind, :]
 
-    
+    #Solve for q dot
+    dq = np.linalg.lstsq(J, xi, rcond=None)[0]
 
     return dq
