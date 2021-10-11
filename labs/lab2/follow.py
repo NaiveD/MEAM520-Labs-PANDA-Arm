@@ -50,7 +50,7 @@ class JacobianDemo():
         vdes = np.array([rx*fx*cos(fx*t),ry*fy*cos(fy*t),0])
         return xdes, vdes
 
-    def ellipse(t,f=1,ry=.05,rz=.15):
+    def ellipse(t,f=1,ry=.15,rz=.15):
         """
         Calculate the position and velocity of the figure ellipse trajector
 
