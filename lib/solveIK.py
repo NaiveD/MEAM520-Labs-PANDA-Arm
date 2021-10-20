@@ -69,15 +69,20 @@ class IK:
 
         ## STUDENT CODE STARTS HERE
 
-        displacement = np.zeros(3)
-        axis = np.zeros(3)
+        displacement = target[0:3, 3] - current[0:3, 3]
+
+        T_tc = np.matmul(np.linalg.inv(current), target)
+        R = T_tc[:3, :3]
+        S = 1/2 * (R - R.T)
+        ax, ay, az = S[2, 1], S[0, 2], S[1, 0]
+        axis = np.array([ax, ay, az])
 
         ## END STUDENT CODE
 
         return displacement, axis
 
     @staticmethod
-    def distance_and_angle(G, H):
+    def distance_and_angle(target, current):
         """
         Helper function which computes the distance and angle between any two
         transforms.
@@ -100,9 +105,18 @@ class IK:
         """
 
         ## STUDENT CODE STARTS HERE
+        displacement = target[0:3, 3] - current[0:3, 3]
+        distance = np.linalg.norm(displacement)
 
-        distance = 0
-        angle = 0
+        T_tc = np.matmul(np.linalg.inv(current), target)
+        R = T_tc[:3, :3]
+
+        trace = (np.trace(R) - 1)/2
+        if trace > 1:
+            trace = 1
+        elif trace < -1:
+            trace = -1
+        angle = np.acos(trace)
 
         ## END STUDENT CODE
 
@@ -127,7 +141,28 @@ class IK:
 
         ## STUDENT CODE STARTS HERE
 
-        success = False
+        success = True
+        # 1. Check the joint limits
+        for i in range(7):
+            if q[i] < self.lower[i]:
+                success = False
+                break
+            if q[i] > self.upper[i]:
+                success = False
+                break
+        
+        # Generate the transformation matrix
+        jointPos, current = self.fk.forward(q)
+
+        # Calculate Distance and Angle
+        distance, angle = self.distance_and_angle(target, current)
+
+        # 2. Check the distance between the achieved and target end effector positions
+        if distance > self.linear_tol:
+            sucess = False
+        # 3. Check the magnitude of the angle between the achieved and target end effector orientations
+        if angle > self.angular_tol:
+            sucess = False
 
         ## END STUDENT CODE
 
