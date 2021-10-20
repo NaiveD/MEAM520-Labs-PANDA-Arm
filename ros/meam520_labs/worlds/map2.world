@@ -8,13 +8,13 @@
 
 
     <model name="obs1">
-      <pose>0.275 0.06335 0.2 0 -0 0</pose>
+      <pose>0.38 0.2 0.2 0 -0 0</pose>
       <static>1</static>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.25 0.0067 0.4</size>
+              <size>0.5 0.0067 0.9</size>
             </box>
           </geometry>
         </visual>
@@ -22,7 +22,7 @@
           <laser_retro>0</laser_retro>
           <geometry>
             <box>
-              <size>0.25 0.0067 0.4</size>
+              <size>0.5 0.0067 0.9</size>
             </box>
           </geometry>
         </collision>
@@ -30,13 +30,13 @@
     </model>
 
     <model name="obs2">
-      <pose>0.275 -0.06335 0.2 0 -0 0</pose>
+      <pose>0.38 -0.2 0.2 0 -0 0</pose>
       <static>1</static>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.25 0.0067 0.4</size>
+              <size>0.5 0.0067 0.9</size>
             </box>
           </geometry>
         </visual>
@@ -44,7 +44,7 @@
           <laser_retro>0</laser_retro>
           <geometry>
             <box>
-              <size>0.25 0.0067 0.4</size>
+              <size>0.5 0.0067 0.9</size>
             </box>
           </geometry>
         </collision>
