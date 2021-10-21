@@ -1,5 +1,6 @@
 import numpy as np
 from math import pi, acos
+from numpy.lib.function_base import disp
 from scipy.linalg import null_space
 
 from lib.calcJacobian import calcJacobian
@@ -15,7 +16,7 @@ class IK:
     center = lower + (upper - lower) / 2 # compute middle of range of motion of each joint
     fk = FK()
 
-    def __init__(self,linear_tol=1e-4, angular_tol=1e-3, max_steps=500, min_step_size=1e-5):
+    def __init__(self, linear_tol=1e-4, angular_tol=1e-3, max_steps=500, min_step_size=1e-5):
         """
         Constructs an optimization-based IK solver with given solver parameters.
         Default parameters are tuned to reasonable values.
@@ -173,7 +174,7 @@ class IK:
     ####################
 
     @staticmethod
-    def end_effector_task(q,target):
+    def end_effector_task(q, target):
         """
         Primary task for IK solver. Computes a joint velocity which will reduce
         the error between the target end effector pose and the current end
@@ -191,6 +192,14 @@ class IK:
         ## STUDENT CODE STARTS HERE
 
         dq = np.zeros(7)
+        # Generate the transformation matrix
+        jointPos, current = IK.fk.forward(q)
+
+        # Calculate the displacement vector and the axis vector
+        displacement, axis = IK.displacement_and_axis(target, current)
+
+        # Compute the desired joint velocity
+        dq = IK_velocity(q, displacement, axis)
 
         ## END STUDENT CODE
 
