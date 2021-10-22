@@ -117,7 +117,7 @@ class IK:
             trace = 1
         elif trace < -1:
             trace = -1
-        angle = np.acos(trace)
+        angle = acos(trace)
 
         ## END STUDENT CODE
 
@@ -190,8 +190,6 @@ class IK:
         """
 
         ## STUDENT CODE STARTS HERE
-
-        dq = np.zeros(7)
         # Generate the transformation matrix
         jointPos, current = IK.fk.forward(q)
 
@@ -263,7 +261,7 @@ class IK:
             rollout.append(q)
 
             # Primary Task - Achieve End Effector Pose
-            dq_ik = self.end_effector_task(q,target)
+            dq_ik = self.end_effector_task(q, target) # particular solution
 
             # Secondary Task - Center Joints
             dq_center = self.joint_centering_task(q)
@@ -271,7 +269,9 @@ class IK:
             ## STUDENT CODE STARTS HERE
 
             # Task Prioritization
-            dq = np.zeros(7) # TODO: implement me!
+            # dq = np.zeros(7) # TODO: implement me!
+            J = calcJacobian(q)
+            special_sol = null_space(J)
 
             # Termination Conditions
             if True: # TODO: check termination conditions
