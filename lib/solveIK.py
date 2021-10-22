@@ -272,8 +272,14 @@ class IK:
             # dq = np.zeros(7) # TODO: implement me!
             J = calcJacobian(q)
             nullJ = null_space(J)
-            diff = (dq_ik - dq_center).reshape((7,1))
-            dq = dq_ik + np.matmul(nullJ.T, diff)
+            # diff = (dq_ik - dq_center).reshape((7,1))
+            # dq = dq_ik + np.matmul(nullJ.T, diff)
+
+            # Projection
+            a = dq_ik + nullJ.flatten()
+            b = dq_center
+            c = (a.T @ b) / (a.T @ a) * a
+            dq = c
 
             # Termination Conditions
             if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
