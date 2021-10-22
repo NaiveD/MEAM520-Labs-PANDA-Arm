@@ -271,10 +271,12 @@ class IK:
             # Task Prioritization
             # dq = np.zeros(7) # TODO: implement me!
             J = calcJacobian(q)
-            special_sol = null_space(J)
+            nullJ = null_space(J)
+            diff = (dq_ik - dq_center).reshape((7,1))
+            dq = dq_ik + np.matmul(nullJ.T, diff)
 
             # Termination Conditions
-            if True: # TODO: check termination conditions
+            if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
                 break # exit the while loop if conditions are met!
 
             ## END STUDENT CODE
