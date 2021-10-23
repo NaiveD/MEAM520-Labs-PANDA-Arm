@@ -70,13 +70,19 @@ class IK:
 
         ## STUDENT CODE STARTS HERE
 
+        # The displacement vector from the origin of the current frame to the target (expressed in the world frame)
         displacement = target[0:3, 3] - current[0:3, 3]
 
+        # Calculate the relative transformation/rotation from the target frame to the current frame
         T_tc = np.matmul(np.linalg.inv(current), target)
         R = T_tc[:3, :3]
-        S = 1/2 * (R - R.T)
-        ax, ay, az = S[2, 1], S[0, 2], S[1, 0]
-        axis = np.array([ax, ay, az])
+        print(current)
+
+        S = 1/2 * (R - R.T) # skew symmatric matrix
+        ax, ay, az = S[2, 1], S[0, 2], S[1, 0] # extract the coefficients
+        axis = np.array([ax, ay, az, 1]) # vector in current frame
+        axis = np.matmul(current, axis) # transform vector to the world frame
+        axis = axis[:3]
 
         ## END STUDENT CODE
 
@@ -147,10 +153,10 @@ class IK:
         for i in range(7):
             if q[i] < self.lower[i]:
                 success = False
-                break
+                return success
             if q[i] > self.upper[i]:
                 success = False
-                break
+                return success
         
         # Generate the transformation matrix
         jointPos, current = self.fk.forward(q)
@@ -160,10 +166,12 @@ class IK:
 
         # 2. Check the distance between the achieved and target end effector positions
         if distance > self.linear_tol:
-            sucess = False
+            success = False
+            return success
         # 3. Check the magnitude of the angle between the achieved and target end effector orientations
         if angle > self.angular_tol:
-            sucess = False
+            success = False
+            return success
 
         ## END STUDENT CODE
 
@@ -269,27 +277,26 @@ class IK:
             ## STUDENT CODE STARTS HERE
 
             # Task Prioritization
-            # dq = np.zeros(7) # TODO: implement me!
-            J = calcJacobian(q)
-            nullJ = null_space(J)
-            # diff = (dq_ik - dq_center).reshape((7,1))
-            # dq = dq_ik + np.matmul(nullJ.T, diff)
+            J = calcJacobian(q) # Calculate the Jacobian
+            nullJ = null_space(J) # Calculate the null space of Jacobian
+            nullJ = nullJ * np.sign(nullJ[0, 0])
 
-            # Projection
-            a = dq_ik + nullJ.flatten()
-            b = dq_center
-            c = (a.T @ b) / (a.T @ a) * a
-            dq = c
+            diff = (dq_center - dq_ik).reshape((7,1))
+            xq = np.linalg.lstsq(nullJ, diff, rcond=None)[0]
+            q_n = (nullJ @ xq).reshape((7,1))
+
+            dq = dq_ik + q_n.reshape((7,))
 
             # Termination Conditions
-            if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
+            # if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
+            #     break # exit the while loop if conditions are met!
+            if len(rollout) >= self.max_steps:
                 break # exit the while loop if conditions are met!
 
             ## END STUDENT CODE
-
             q = q + dq
 
-        success = self.is_valid_solution(q,target)
+        success = self.is_valid_solution(q, target)
         return q, success, rollout
 
 ################################
