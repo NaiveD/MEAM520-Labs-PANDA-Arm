@@ -76,12 +76,11 @@ class IK:
         # Calculate the relative transformation/rotation from the target frame to the current frame
         T_tc = np.matmul(np.linalg.inv(current), target)
         R = T_tc[:3, :3]
-        print(current)
 
         S = 1/2 * (R - R.T) # skew symmatric matrix
         ax, ay, az = S[2, 1], S[0, 2], S[1, 0] # extract the coefficients
-        axis = np.array([ax, ay, az, 1]) # vector in current frame
-        axis = np.matmul(current, axis) # transform vector to the world frame
+        axis = np.array([ax, ay, az]) # vector in current frame
+        axis = np.matmul(current[:3, :3], axis) # transform vector to the world frame
         axis = axis[:3]
 
         ## END STUDENT CODE
@@ -288,10 +287,10 @@ class IK:
             dq = dq_ik + q_n.reshape((7,))
 
             # Termination Conditions
-            # if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
-            #     break # exit the while loop if conditions are met!
-            if len(rollout) >= self.max_steps:
+            if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
                 break # exit the while loop if conditions are met!
+            # if len(rollout) >= self.max_steps:
+            #     break # exit the while loop if conditions are met!
 
             ## END STUDENT CODE
             q = q + dq
@@ -319,6 +318,7 @@ if __name__ == "__main__":
         [0,0,0, 1],
     ])
 
+    joints, current = ik.fk.forward(seed)
     q, success, rollout = ik.inverse(target, seed)
 
     for i, q in enumerate(rollout):
