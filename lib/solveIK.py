@@ -289,8 +289,6 @@ class IK:
             # Termination Conditions
             if np.linalg.norm(dq) < self.min_step_size or len(rollout) >= self.max_steps:
                 break # exit the while loop if conditions are met!
-            # if len(rollout) >= self.max_steps:
-            #     break # exit the while loop if conditions are met!
 
             ## END STUDENT CODE
             q = q + dq
@@ -318,7 +316,6 @@ if __name__ == "__main__":
         [0,0,0, 1],
     ])
 
-    joints, current = ik.fk.forward(seed)
     q, success, rollout = ik.inverse(target, seed)
 
     for i, q in enumerate(rollout):
