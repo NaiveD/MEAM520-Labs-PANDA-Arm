@@ -33,7 +33,7 @@ if __name__ == "__main__":
     print("Running test "+sys.argv[1])
     print("Moving to Start Position")
     arm.move_to_position(starts[index])
-    map_struct = loadmap("../maps/"+mapNames[index] + ".txt")
+    map_struct = loadmap("../../maps/"+mapNames[index] + ".txt")
     print("Map = "+ mapNames[index])
 
     print("Starting to plan")
