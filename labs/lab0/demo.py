@@ -39,8 +39,8 @@ arm.open_gripper()
 # arm.move_to_position(q)
 
 # # Configuration in Lab 1 instructions
-q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
-arm.move_to_position(q)
+# q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4])
+# arm.move_to_position(q)
 
 # # Test to see the relationship between q[0] and theta_1
 # q = np.array([0 + pi/4, 0, 0, -pi/2, 0, pi/2, pi/4])
@@ -69,6 +69,10 @@ arm.move_to_position(q)
 # # Test to see the relationship between q[6] and theta_7
 # q = np.array([0, 0, 0, -pi/2, 0, pi/2, pi/4 + pi/4])
 # arm.move_to_position(q)
+
+# Bad seed in Lab 3
+q = np.array([pi/2,0,-0,-pi/4,0,pi,0])
+arm.move_to_position(q)
 
 
 arm.close_gripper()

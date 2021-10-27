@@ -100,6 +100,22 @@ def transform(d,rpy):
 # to generate your own tests, or directly write out transforms you wish to test.
 
 targets = [
+    np.array([
+        [0, 0,1,0.5],
+        [-1,0,0,0],
+        [0,-1,0,0.9],
+        [0,0,0, 1]]),
+    np.array([
+        [1,0,0,0.5],
+        [0,-1,0,0],
+        [0,0,-1,0.5],
+        [0,0,0, 1]]),
+    np.array([
+        [0,1,0,0.5],
+        [1,0,0,0],
+        [0,0,-1,0.3],
+        [0,0,0, 1],
+    ]),
     transform( np.array([-.2, -.3, .5]), np.array([0,pi,pi])            ),
     transform( np.array([-.2, .3, .5]),  np.array([pi/6,5/6*pi,7/6*pi]) ),
     transform( np.array([.5, 0, .5]),    np.array([0,pi,pi])            ),
@@ -112,6 +128,20 @@ targets = [
     transform( np.array([.4, 0, 0.2]),   np.array([pi/2,pi-pi/2,pi])    ),
     transform( np.array([.4, 0, 0]),     np.array([pi/2,pi-pi/2,pi])    ),
 ]
+
+# targets2 = [
+#     transform( np.array([0.1, 0.3, 0.5]), np.array([pi/4,1/7*pi,0])        ),
+#     transform( np.array([0.321, -0.23, 0.23]),  np.array([pi/2,2/3*pi,pi/6]) ),
+#     transform( np.array([0.123, 0.221, 0.35]),    np.array([0,0,pi/2])     ),
+#     transform( np.array([-0.3, -0.12, 0.34]),    np.array([0,pi/8,pi])     ),
+#     transform( np.array([0.114, 0.514, 0.8]),  np.array([0,0,0])           ),
+#     transform( np.array([0.233, -0.302, 0.7]),  np.array([0,pi,pi/2])      ),
+#     transform( np.array([-0.121, -0.6, 0.25]), np.array([0,0,7/6*pi])      ),
+#     transform( np.array([0.12, -0.36, 0.42]), np.array([pi/3,pi/4,pi/5])   ),
+#     transform( np.array([0.35, 0.132, 0.22]),   np.array([0,pi-pi/2,pi/5]) ),
+#     transform( np.array([0.44, -0.24, 0.23]),   np.array([pi/5,pi/2,-pi/3])),
+#     transform( np.array([0.24, 0.6, 0.6]),     np.array([0,pi*3/2,pi/4])   ),    
+# ]
 
 ####################
 ## Test Execution ##
@@ -147,3 +177,43 @@ if __name__ == "__main__":
 
         if i < len(targets) - 1:
             input("Press Enter to move to next target...")
+
+
+    # dt_list = []
+    # iter_list = []
+    # success_cnt = 0
+    # # For Performance Statistics:
+    # for i, target in enumerate(targets):
+    #     # print("Target " + str(i) + " located at:")
+    #     # print(target)
+    #     print("Target " + str(i) + ": ")
+
+    #     # seed = arm.neutral_position() # use neutral configuration as seed
+    #     seed = np.array([0,0,0,-pi/2,0,pi/2,pi/4])
+
+    #     start = perf_counter()
+    #     q, success, rollout = ik.inverse(target, seed)
+    #     stop = perf_counter()
+    #     dt = stop - start
+
+    #     if success:
+    #         print("Solution found in {time:2.2f} seconds ({it} iterations).".format(time=dt,it=len(rollout)))
+    #         success_cnt += 1
+    #         dt_list.append(dt)
+    #         iter_list.append(len(rollout))
+
+    #     else:
+    #         print('IK Failed for this target using this seed.')
+
+    #     print("\n")
+
+    #     # if i < len(targets) - 1:
+    #     #     input("Press Enter to move to next target...")
+    
+    # time_arr = np.array(dt_list)
+    # iter_arr = np.array(iter_list)
+    # success_rate = success_cnt / len(targets)
+
+    # print(np.mean(time_arr), np.median(time_arr), np.max(time_arr))
+    # print(np.mean(iter_arr), np.median(iter_arr), np.max(iter_arr))
+    # print(success_rate)

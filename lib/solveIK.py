@@ -151,26 +151,27 @@ class IK:
         # 1. Check the joint limits
         for i in range(7):
             if q[i] < self.lower[i]:
+                print("joint %d exceeds joint lower limit" % i)
                 success = False
-                return success
             if q[i] > self.upper[i]:
+                print("joint %d exceeds joint upper limit" % i)
                 success = False
-                return success
         
         # Generate the transformation matrix
         jointPos, current = self.fk.forward(q)
 
         # Calculate Distance and Angle
         distance, angle = self.distance_and_angle(target, current)
+        print("distance = %f, angle = %f" % (distance, angle))
 
         # 2. Check the distance between the achieved and target end effector positions
         if distance > self.linear_tol:
+            print("distance exceeds tolerance")
             success = False
-            return success
         # 3. Check the magnitude of the angle between the achieved and target end effector orientations
         if angle > self.angular_tol:
+            print("angle exceeds tolerance")
             success = False
-            return success
 
         ## END STUDENT CODE
 
@@ -293,6 +294,15 @@ class IK:
             ## END STUDENT CODE
             q = q + dq
 
+            # # 1. Check the joint limits
+            # for i in range(7):
+            #     if q[i] < self.lower[i]:
+            #         print("In iterations: joint %d exceeds joint lower limit" % i)
+            #         success = False
+            #     if q[i] > self.upper[i]:
+            #         print("In iterations: joint %d exceeds joint upper limit" % i)
+            #         success = False
+
         success = self.is_valid_solution(q, target)
         return q, success, rollout
 
@@ -308,13 +318,36 @@ if __name__ == "__main__":
 
     # matches figure in the handout
     seed = np.array([0,0,0,-pi/2,0,pi/2,pi/4])
+    # seed = np.array([pi/2,0,-0,-pi/4,0,pi,0])
+    # seed = np.array([0,0,0,-pi/3,0,pi/3,pi/6])
+    # seed = np.array([0,0,0,-pi/3,0,pi/3,-pi/4])
+
+    # target = np.array([
+    #     [0,-1,0,0.3],
+    #     [-1,0,0,0],
+    #     [0,0,-1,.5],
+    #     [0,0,0, 1],
+    # ])
 
     target = np.array([
-        [0,-1,0,0.3],
+        [0,-1,0,3],
         [-1,0,0,0],
-        [0,0,-1,.5],
+        [0,0,-1,5],
         [0,0,0, 1],
     ])
+    
+    # target = np.array([
+    #     [0,1,0,0.5],
+    #     [1,0,0,0],
+    #     [0,0,-1,0.3],
+    #     [0,0,0, 1],
+    # ])
+
+    # target = np.array([
+    #     [1,0,0,0.5],
+    #     [0,-1,0,0],
+    #     [0,0,-1,0.5],
+    #     [0,0,0, 1]])
 
     q, success, rollout = ik.inverse(target, seed)
 
