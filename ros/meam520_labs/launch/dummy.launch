@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+  <arg name="roll" default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="0"/>
+
+  <!-- This argument sets the initial joint states -->
+  <arg name="initial_joint_states"
+    default=" -J dummy::panda_joint1 0.000
+              -J dummy::panda_joint2 -0.785
+              -J dummy::panda_joint3 0.0
+              -J dummy::panda_joint4 -2.356
+              -J dummy::panda_joint5 0.0
+              -J dummy::panda_joint6 1.57
+              -J dummy::panda_joint7 0.785"/>
+
+
+  <param name="dummy_description" textfile="$(find meam520_labs)/urdf/dummy.urdf"/>
+
+  <!-- Spawn urdf of the robot -->
+  <node name="dummy_description" pkg="gazebo_ros" type="spawn_model" args="-param dummy_description -urdf -model dummy $(arg initial_joint_states)
+      -x $(arg x) -y $(arg y) -z $(arg z)
+      -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)
+      "/>
+
+</launch>

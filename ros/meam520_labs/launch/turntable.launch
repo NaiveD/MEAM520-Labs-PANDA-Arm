@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- LAZY SUSAN TURNTABLE -->
+
+  <arg name="table_height" default=".2" />
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find meam520_labs)/urdf/turntable.xacro" />
+
+  <rosparam command="load" file="$(find meam520_labs)/config/turntable_controller.yaml" />
+
+  <!-- Spawn a turntable into Gazebo -->
+  <node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model turntable
+  -x 0 -y 0 -z $(arg table_height)
+  -R 0 -P 0 -Y 0
+  -robot_namespace turntable
+  " />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+  <node pkg="rostopic" type="rostopic" name="fake_joint_calibration" args="pub /turntable/calibrated std_msgs/Bool true" />
+
+  <node name="default_loaded_controllers_spawner"
+    pkg="controller_manager" type="spawner" output="screen"
+    args="--wait-for=/turntable/calibrated turntable_controller " />
+    <!-- joint_velocity_controller -->
+
+
+
+  <arg name="speed" default="0.0523"/>  <!-- approx .5 rpm --> -->
+  <arg name="delay" default="5"/>
+  <node pkg="rostopic"
+        type="rostopic"
+        name="spin_turntable"
+        launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "
+        args="pub /turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
+
+
+</launch>
