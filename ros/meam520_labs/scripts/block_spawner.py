@@ -5,6 +5,7 @@ from std_srvs.srv import Empty, EmptyRequest
 from math import sin, cos, pi
 import numpy as np
 from time import sleep
+import os
 
 import tf
 
@@ -43,11 +44,11 @@ def place(x,y,z,type):
     pose.orientation.w = q[3]
     count = count + 1
     success = False
-    while not success:
+    while not success and not rospy.is_shutdown():
         try:
             success = spawn_model_client(
                     model_name='cube'+str(count)+'_'+type,
-                    model_xml=open('/home/shane/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro', 'r').read(),
+                    model_xml=open(os.path.expanduser('~/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro'), 'r').read(),
                     robot_namespace='/foo',
                     initial_pose=pose,
                     reference_frame='world')
