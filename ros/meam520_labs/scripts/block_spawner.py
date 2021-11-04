@@ -47,7 +47,7 @@ def place(x,y,z,type):
         try:
             success = spawn_model_client(
                     model_name='cube'+str(count)+'_'+type,
-                    model_xml=open('/home/jake/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro', 'r').read(),
+                    model_xml=open('/home/shane/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro', 'r').read(),
                     robot_namespace='/foo',
                     initial_pose=pose,
                     reference_frame='world')

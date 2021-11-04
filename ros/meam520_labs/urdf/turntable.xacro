@@ -83,6 +83,32 @@
   </gazebo>
   <gazebo reference="upper_base">
     <material>Gazebo/LightGrey</material>
+    <collision>
+      <surface>
+        <bounce>
+          <restitution_coefficient>0</restitution_coefficient>
+          <threshold>1e+06</threshold>
+        </bounce>
+        <friction>
+          <torsional>
+            <coefficient>100</coefficient>
+          </torsional>
+          <ode>
+            <mu>100</mu>
+            <mu2>100</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <kp>300000</kp>
+            <kd>1000</kd>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+
   </gazebo>
+
+
 
 </robot>
