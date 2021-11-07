@@ -4,6 +4,22 @@ from lib.detectCollision import detectCollision
 from lib.loadmap import loadmap
 from copy import deepcopy
 
+def scalebox():
+    pass
+
+def sampleRandom():
+    # Workspace to the configuration space 
+    # Choose a random point in the workspace that is within the boundaries
+    # IK the random point to bring it into the configuration space
+    pass
+
+def getincrementPoint():
+    pass
+
+def checkincrementCollision():
+    pass
+
+
 def rrt(map, start, goal):
     """
     Implement RRT algorithm in this file.
@@ -20,6 +36,10 @@ def rrt(map, start, goal):
     # get joint limits
     lowerLim = np.array([-2.8973,-1.7628,-2.8973,-3.0718,-2.8973,-0.0175,-2.8973])
     upperLim = np.array([2.8973,1.7628,2.8973,-0.0698,2.8973,3.7525,2.8973])
+
+    # 
+
+
 
     return path
 
