@@ -23,7 +23,7 @@ mapNames = ["map1",
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print("usage:\n\tpython rrt_demo.py 1\n\tpython jacobianDemo.py 2\n\tpython jacobianDemo.py 3 ...")
+        print("usage:\n\tpython rrt_demo.py 1\n\tpython rrt_demo.py 2\n\tpython rrt_demo.py 3 ...")
         exit()
 
     rospy.init_node('RRT')
