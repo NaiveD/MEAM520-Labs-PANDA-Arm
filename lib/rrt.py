@@ -5,18 +5,34 @@ from lib.loadmap import loadmap
 from copy import deepcopy
 
 def scalebox():
+    """ 
+    Array of how much we should scale each box depending on the link to take the volume of each link into account.
+    """
     pass
 
-def sampleRandom():
-    # Workspace to the configuration space 
-    # Choose a random point in the workspace that is within the boundaries
-    # IK the random point to bring it into the configuration space
-    pass
+def sampleRandom(lowerLim, upperLim):
+    """ 
+    Sample a random point in the workspace, and use IK to convert it into the configuration space
+
+    Or just
+
+    Sample a random point in the configuration space
+    """
+    
+    sample = []
+    for i in range(len(lowerLim)):
+        sample.append(lowerLim[i] + (upperLim[i] - lowerLim[i]) * np.random.random_sample())
+    return np.array(sample)
 
 def getincrementPoint():
+    """
+
+    """
     pass
 
 def checkincrementCollision():
+    """
+    """
     pass
 
 
@@ -37,7 +53,14 @@ def rrt(map, start, goal):
     lowerLim = np.array([-2.8973,-1.7628,-2.8973,-3.0718,-2.8973,-0.0175,-2.8973])
     upperLim = np.array([2.8973,1.7628,2.8973,-0.0698,2.8973,3.7525,2.8973])
 
-    # 
+    obstacles = map.obstacles
+
+    terminate = False
+    while not terminate:
+        # Randomly sample a point in the configuration space
+        newSample = sampleRandom(lowerLim, upperLim)
+
+        
 
 
 

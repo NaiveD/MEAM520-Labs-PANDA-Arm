@@ -11,9 +11,8 @@ from collections import namedtuple
 def loadmap(filename):
     """
     :param filename: string with the location of the map file
-    :return: map struct with boundary and obstacles element
-                map.obstacles [Nx6] array of the obstacle boundaries
-                map.boundary [6] array of the map boundary
+    :return: map struct with obstacles element
+             map.obstacles [Nx6] array of the obstacle boundaries
     """
     obstacles = []
     with open(filename, 'r') as reader:
@@ -34,3 +33,15 @@ def loadmap(filename):
     # Returns the map in a struct
     MyStruct = namedtuple("map", "obstacles")
     return MyStruct(obstacles = obstacles)
+
+# # For testing
+# if __name__ == "__main__":
+#     map = loadmap("../maps/map1.txt")
+#     print(map)
+#     print(map.obstacles)
+#     # map1.txt
+#     # [[ 0.15     -0.3       0.496825  0.45      0.3       0.503175]]
+#     # map2.txt 
+#     # [[ 0.18     0.19665 -0.25     0.69     0.20335  0.65   ]
+#     # [ 0.18    -0.20335 -0.25     0.69    -0.19665  0.65   ]]
+#     print(map.obstacles.shape)
