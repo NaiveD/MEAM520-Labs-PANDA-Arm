@@ -30,8 +30,9 @@ def getincrementPoint():
     """
     pass
 
-def checkincrementCollision():
+def checkCollision():
     """
+    TODO Amar
     """
     pass
 
@@ -60,7 +61,8 @@ def rrt(map, start, goal):
         # Randomly sample a point in the configuration space
         newSample = sampleRandom(lowerLim, upperLim)
 
-        
+
+
 
 
 
