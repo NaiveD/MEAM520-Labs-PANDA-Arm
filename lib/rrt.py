@@ -4,6 +4,13 @@ from lib.detectCollision import detectCollision
 from lib.loadmap import loadmap
 from copy import deepcopy
 
+class Tree:
+    def __init__(self):
+        pass
+    
+    def addvertex(self, vertex):
+        pass
+
 def scalebox():
     """ 
     Array of how much we should scale each box depending on the link to take the volume of each link into account.
@@ -24,13 +31,19 @@ def sampleRandom(lowerLim, upperLim):
         sample.append(lowerLim[i] + (upperLim[i] - lowerLim[i]) * np.random.random_sample())
     return np.array(sample)
 
-def getincrementPoint():
+def checkPathCollision():
     """
-
+    TODO Keyan
     """
     pass
 
-def checkCollision():
+def getincrementPoint():
+    """
+    TODO Keyan
+    """
+    pass
+
+def checkPointCollision():
     """
     TODO Amar
     """
@@ -57,9 +70,14 @@ def rrt(map, start, goal):
     obstacles = map.obstacles
 
     terminate = False
+    startTree = Tree()
+    goalTree = Tree()
     while not terminate:
         # Randomly sample a point in the configuration space
         newSample = sampleRandom(lowerLim, upperLim)
+
+        # TODO: Keyan
+
 
 
 
