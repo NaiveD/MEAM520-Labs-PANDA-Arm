@@ -59,9 +59,9 @@ def checkPathCollision(EndPoint1, EndPoint2):
     dq = 0.01 # The minimum step (needs to be tuned by testing)
     dist = np.linalg.norm(EndPoint1-EndPoint2) # The distance between the two end points of the path
     num_points = int(dist/dq)
-    print("dist = ", dist)
-    print("dq = ", dq)
-    print("num_points = ", num_points)
+    # print("dist = ", dist)
+    # print("dq = ", dq)
+    # print("num_points = ", num_points)
     t = 1 / num_points
     
     for i in range(num_points+1):
