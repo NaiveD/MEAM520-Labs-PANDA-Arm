@@ -4,12 +4,29 @@ from lib.detectCollision import detectCollision
 from lib.loadmap import loadmap
 from copy import deepcopy
 
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.parent = None
+        self.child = None
+
 class Tree:
-    def __init__(self):
-        pass
+    def __init__(self, root):
+        self.root = root
+        self.vertices = [root]
     
-    def addvertex(self, vertex):
-        pass
+    def addNode(self, NewPoint):
+        NewPoint.parent = self.getNearestNode(NewPoint)
+        self.vertices.append(NewPoint)
+
+    def getNearestNode(self, NewPoint):
+        NearestNode = self.vertices[0]
+        dist = getDistance(self.vertices[0], NewPoint)
+        for eachNode in self.vertices:
+            if getDistance(eachNode, NewPoint) < dist:
+                NearestNode = eachNode
+                dist = getDistance(eachNode, NewPoint)
+        return NearestNode
 
 def scalebox():
     """ 
@@ -31,11 +48,32 @@ def sampleRandom(lowerLim, upperLim):
         sample.append(lowerLim[i] + (upperLim[i] - lowerLim[i]) * np.random.random_sample())
     return np.array(sample)
 
-def checkPathCollision():
+def checkPathCollision(EndPoint1, EndPoint2):
     """
     TODO Keyan
+    Returns true if there are no collisions between the path and the obstacles and it's ok.
+    Returns false if there are collisions between the path and the obstacles and it's not ok.
     """
-    pass
+    collide_ok = True
+    
+    dq = 0.01 # The minimum step (needs to be tuned by testing)
+    dist = np.linalg.norm(EndPoint1-EndPoint2) # The distance between the two end points of the path
+    num_points = int(dist/dq)
+    print("dist = ", dist)
+    print("dq = ", dq)
+    print("num_points = ", num_points)
+    t = 1 / num_points
+    
+    for i in range(num_points+1):
+        inter_point = EndPoint1 + i * t * (EndPoint2 - EndPoint1)
+        if (not checkPointCollision(inter_point)):
+            collide_ok = False
+            return collide_ok
+        # else:
+        #     print("%d-th intermediate point, collision ok!" % i)
+    
+    return collide_ok
+    
 
 def getincrementPoint():
     """
@@ -43,12 +81,24 @@ def getincrementPoint():
     """
     pass
 
-def checkPointCollision():
+def checkPointCollision(Point):
     """
     TODO Amar
     """
+    return True
+
+def retrievePath(startTree, endTree):
     pass
 
+def getDistance(Point1, Point2):
+    """
+    Get the distance between two points. Used for finding the closest point to the new point in the tree.
+    """
+    q1 = Point1.data
+    q2 = Point2.data
+
+    dist = np.linalg.norm(q1-q2)
+    return dist
 
 def rrt(map, start, goal):
     """
@@ -70,19 +120,35 @@ def rrt(map, start, goal):
     obstacles = map.obstacles
 
     terminate = False
-    startTree = Tree()
-    goalTree = Tree()
+    startNode = Node(start)
+    goalNode = Node(goal)
+    startTree = Tree(startNode)
+    goalTree = Tree(goalNode)
     while not terminate:
-        # Randomly sample a point in the configuration space
-        newSample = sampleRandom(lowerLim, upperLim)
+        # Randomly sample a new point in the configuration space
+        # Note: Point is just the joint angles data, Node is in the tree
+        NewPoint = sampleRandom(lowerLim, upperLim)
+        NewNode = Node(NewPoint)
+        print(NewPoint)
 
-        # TODO: Keyan
+        # If this NewPoint is not in the free configuration space, then sample a new point
+        if (not checkPointCollision(NewPoint)):
+            continue
 
+        # If this NewPoint is in the free configuration space
+        # Draw a line between the nearest point in the starting tree and the NewPoint
+        ST_NearestPoint = startTree.getNearestNode(NewNode).data # Get the nearest point in the starting tree
+        GT_NearestPoint = goalTree.getNearestNode(NewNode).data # Get the nearest point in the goal tree
 
+        # If there are no collisions then add the new point to the starting tree
+        if (checkPathCollision(ST_NearestPoint, NewPoint)):
+            startTree.addNode(NewNode)
+        if (checkPathCollision(GT_NearestPoint, NewPoint)):
+            goalTree.addNode(NewNode)
+            terminate = True
 
-
-
-
+    # Retrieve the path from the startTree and the goalTree
+    path = retrievePath(startTree, goalTree)
 
     return path
 
