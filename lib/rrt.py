@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from lib.detectCollision import detectCollision
+from lib.calculateFK import FK
 from lib.loadmap import loadmap
 from copy import deepcopy
 
@@ -28,11 +29,22 @@ class Tree:
                 dist = getDistance(eachNode, NewPoint)
         return NearestNode
 
-def scalebox():
-    """ 
-    Array of how much we should scale each box depending on the link to take the volume of each link into account.
+def scalebox(obstacle):
     """
-    pass
+    Returns a scaled up box for the obstacle
+    :param obstacle: [0x6] array based on the obstacle struct
+    :return: [0x6] list of the box parameters
+    """
+    # Increase the box by this size
+    scale = .1
+    box = []
+    for i in range(6):
+        # Make the box slightly larger than the obstacle to account for arm volume
+        if obstacle[i] < 0:
+            box.append((obstacle[i] - scale))
+        else:
+            box.append((obstacle[i] + scale))
+    return box
 
 def sampleRandom(lowerLim, upperLim):
     """ 
@@ -73,12 +85,42 @@ def checkPathCollision(EndPoint1, EndPoint2):
         #     print("%d-th intermediate point, collision ok!" % i)
     
     return collide_ok
-    
-def checkPointCollision(Point):
+
+def getJointPos(Point):
     """
-    TODO Amar
+    Helper function to get all the points needed for collision checking
+    :param Point: [0x7] joint configuration
+    :return: 9x3 matrix of all the points in order from 0 to end-effector
     """
-    return True
+    fk = FK()
+    JP, EE = fk.forward(Point)
+    points = np.zeros((9,3))
+    points[1:7, :] = JP
+    points[8,:] = EE
+    return points
+
+def checkPointCollision(Point, obstacles):
+    """
+    Checks if a the link collides with a object
+    :param Point: [0x7] joint configuration
+    :param obstacles: nx6 matrix of the obstacles
+    :return: True if the arm collides with an object
+    """
+    # Get all the points for the links
+    points = getJointPos(Point)
+
+    # Initialize Collision
+    collision = False
+
+    # Check collision for each object
+    for i in range(obstacles.shape[0]):
+        box = scalebox(obstacles[i, :])
+        # If there is a collision then return true
+        if detectCollision(points[0:8, :], points[1:9, :], box):
+            collision = True
+            break
+
+    return collision
 
 def retrievePath(startTree, endTree):
     pass
