@@ -74,13 +74,6 @@ def checkPathCollision(EndPoint1, EndPoint2):
     
     return collide_ok
     
-
-def getincrementPoint():
-    """
-    TODO Keyan
-    """
-    pass
-
 def checkPointCollision(Point):
     """
     TODO Amar
