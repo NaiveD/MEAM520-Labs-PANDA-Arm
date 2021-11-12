@@ -62,28 +62,25 @@ def sampleRandom(lowerLim, upperLim):
 def checkPathCollision(EndPoint1, EndPoint2, obstacles):
     """
     TODO Keyan
-    Returns true if there are no collisions between the path and the obstacles and it's ok.
     Returns false if there are collisions between the path and the obstacles and it's not ok.
+    Returns true if there are no collisions between the path and the obstacles and it's ok.
     """
-    collide_ok = True
+    collide = False
     
-    dq = 0.01 # The minimum step (needs to be tuned by testing)
+    dq = 0.1 # The minimum step (needs to be tuned by testing)
     dist = np.linalg.norm(EndPoint1-EndPoint2) # The distance between the two end points of the path
     num_points = int(dist/dq)
-    # print("dist = ", dist)
-    # print("dq = ", dq)
-    # print("num_points = ", num_points)
     t = 1 / num_points
     
     for i in range(num_points+1):
         inter_point = EndPoint1 + i * t * (EndPoint2 - EndPoint1)
-        if (not checkPointCollision(inter_point, obstacles)):
-            collide_ok = False
-            return collide_ok
+        if (checkPointCollision(inter_point, obstacles)):
+            collide = True
+            return collide
         # else:
         #     print("%d-th intermediate point, collision ok!" % i)
     
-    return collide_ok
+    return collide
 
 def getJointPos(Point):
     """
@@ -181,11 +178,15 @@ def rrt(map, start, goal):
         # Note: Point is just the joint angles data, Node is in the tree
         NewPoint = sampleRandom(lowerLim, upperLim)
         NewNode = Node(NewPoint)
-        print(NewPoint)
+        addST = False
+        addGT = False
 
         # If this NewPoint is not in the free configuration space, then sample a new point
-        if (not checkPointCollision(NewPoint, obstacles)):
+        if (checkPointCollision(NewPoint, obstacles)):
+            print("NewPoint has collision, sample next.")
             continue
+            
+        print("NewPoint: ", NewPoint)
 
         # If this NewPoint is in the free configuration space
         # Draw a line between the nearest point in the starting tree and the NewPoint
@@ -193,11 +194,19 @@ def rrt(map, start, goal):
         GT_NearestPoint = goalTree.getNearestNode(NewNode).data # Get the nearest point in the goal tree
 
         # If there are no collisions then add the new point to the starting tree
-        if (checkPathCollision(ST_NearestPoint, NewPoint, obstacles)):
+        if (not checkPathCollision(ST_NearestPoint, NewPoint, obstacles)):
             startTree.addNode(NewNode)
-        if (checkPathCollision(GT_NearestPoint, NewPoint, obstacles)):
+            addST = True
+            print("New Point add to start tree.")
+
+        if (not checkPathCollision(GT_NearestPoint, NewPoint, obstacles)):
             goalTree.addNode(NewNode)
+            addGT = True
+            print("New Point add to goal tree.")
+        
+        if (addST and addGT):
             terminate = True
+            
 
     # Retrieve the path from the startTree and the goalTree
     path = retrievePath(startTree, goalTree)
