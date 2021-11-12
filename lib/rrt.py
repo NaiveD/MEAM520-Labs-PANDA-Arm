@@ -43,6 +43,7 @@ def scalebox(obstacle):
             box.append((obstacle[i] - scale))
         else:
             box.append((obstacle[i] + scale))
+    print("scaled box = ", box)
     return box
 
 def sampleRandom(lowerLim, upperLim):
@@ -90,9 +91,9 @@ def getJointPos(Point):
     """
     fk = FK()
     JP, EE = fk.forward(Point)
-    points = np.zeros((10,3))
+    points = np.zeros((9,3))
     points[1:8, :] = JP
-    points[9,:] = EE.T[0,0:3]
+    points[8,:] = EE.T[3,0:3]
     return points
 
 def checkPointCollision(Point, obstacles):
@@ -104,6 +105,7 @@ def checkPointCollision(Point, obstacles):
     """
     # Get all the points for the links
     points = getJointPos(Point)
+    print(points)
 
     # Initialize Collision
     collision = False
@@ -173,6 +175,12 @@ def rrt(map, start, goal):
     goalNode = Node(goal)
     startTree = Tree(startNode)
     goalTree = Tree(goalNode)
+
+    if (checkPointCollision(start, obstacles)):
+        print("Start collision detected")
+    if (checkPointCollision(goal, obstacles)):
+        print("Goal collision detected")
+
     while not terminate:
         # Randomly sample a new point in the configuration space
         # Note: Point is just the joint angles data, Node is in the tree
@@ -184,6 +192,7 @@ def rrt(map, start, goal):
         # If this NewPoint is not in the free configuration space, then sample a new point
         if (checkPointCollision(NewPoint, obstacles)):
             print("NewPoint has collision, sample next.")
+            terminate = True
             continue
             
         print("NewPoint: ", NewPoint)
