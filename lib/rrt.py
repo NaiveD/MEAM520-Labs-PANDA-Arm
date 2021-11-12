@@ -35,7 +35,7 @@ def scalebox(obstacle):
     :return: [0x6] list of the box parameters
     """
     # Increase the box by this size
-    scale = .1
+    scale = 0.1
     box = []
     for i in range(6):
         # Make the box slightly larger than the obstacle to account for arm volume
@@ -90,9 +90,9 @@ def getJointPos(Point):
     """
     fk = FK()
     JP, EE = fk.forward(Point)
-    points = np.zeros((10,3))
+    points = np.zeros((9,3))
     points[1:8, :] = JP
-    points[9,:] = EE.T[0,0:3]
+    points[8,:] = EE.T[3,0:3]
     return points
 
 def checkPointCollision(Point, obstacles):
@@ -112,7 +112,7 @@ def checkPointCollision(Point, obstacles):
     for i in range(obstacles.shape[0]):
         box = scalebox(obstacles[i, :])
         # If there is a collision then return true
-        if detectCollision(points[0:8, :], points[1:9, :], box):
+        if any(detectCollision(points[0:8, :], points[1:9, :], box)):
             collision = True
             break
 
