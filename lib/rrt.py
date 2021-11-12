@@ -60,7 +60,7 @@ def sampleRandom(lowerLim, upperLim):
         sample.append(lowerLim[i] + (upperLim[i] - lowerLim[i]) * np.random.random_sample())
     return np.array(sample)
 
-def checkPathCollision(EndPoint1, EndPoint2):
+def checkPathCollision(EndPoint1, EndPoint2, obstacles):
     """
     TODO Keyan
     Returns true if there are no collisions between the path and the obstacles and it's ok.
@@ -78,7 +78,7 @@ def checkPathCollision(EndPoint1, EndPoint2):
     
     for i in range(num_points+1):
         inter_point = EndPoint1 + i * t * (EndPoint2 - EndPoint1)
-        if (not checkPointCollision(inter_point)):
+        if (not checkPointCollision(inter_point, obstacles)):
             collide_ok = False
             return collide_ok
         # else:
@@ -167,7 +167,7 @@ def rrt(map, start, goal):
         print(NewPoint)
 
         # If this NewPoint is not in the free configuration space, then sample a new point
-        if (not checkPointCollision(NewPoint)):
+        if (not checkPointCollision(NewPoint, obstacles)):
             continue
 
         # If this NewPoint is in the free configuration space
@@ -176,9 +176,9 @@ def rrt(map, start, goal):
         GT_NearestPoint = goalTree.getNearestNode(NewNode).data # Get the nearest point in the goal tree
 
         # If there are no collisions then add the new point to the starting tree
-        if (checkPathCollision(ST_NearestPoint, NewPoint)):
+        if (checkPathCollision(ST_NearestPoint, NewPoint, obstacles)):
             startTree.addNode(NewNode)
-        if (checkPathCollision(GT_NearestPoint, NewPoint)):
+        if (checkPathCollision(GT_NearestPoint, NewPoint, obstacles)):
             goalTree.addNode(NewNode)
             terminate = True
 
