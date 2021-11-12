@@ -9,7 +9,6 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.parent = None
-        self.child = None
 
 class Tree:
     def __init__(self, root):
@@ -122,8 +121,26 @@ def checkPointCollision(Point, obstacles):
 
     return collision
 
-def retrievePath(startTree, endTree):
-    pass
+def retrievePath(startTree, goalTree):
+    path = []
+    ST_new_Node = startTree.vertices.pop()
+    path.append(ST_new_Node.data)
+    ST_parent_node = ST_new_Node.parent
+
+    while (ST_parent_node != startTree.root):
+        path.insert(0, ST_parent_node.data)
+        ST_parent_node = ST_parent_node.parent
+    path.insert(0, startTree.root.data)
+
+    GT_new_Node = goalTree.vertices.pop()
+    GT_parent_node = GT_new_Node.parent
+    while (GT_parent_node != goalTree.root):
+        path.append(GT_parent_node.data)
+        GT_parent_node = GT_parent_node.parent
+    path.append(goalTree.root.data)
+
+    return path
+
 
 def getDistance(Point1, Point2):
     """
@@ -184,6 +201,7 @@ def rrt(map, start, goal):
 
     # Retrieve the path from the startTree and the goalTree
     path = retrievePath(startTree, goalTree)
+    print("path = ", path)
 
     return path
 
