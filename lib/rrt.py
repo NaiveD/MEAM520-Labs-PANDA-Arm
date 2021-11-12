@@ -35,7 +35,7 @@ def scalebox(obstacle):
     :return: [0x6] list of the box parameters
     """
     # Increase the box by this size
-    scale = .1
+    scale = 0.1
     box = []
     for i in range(6):
         # Make the box slightly larger than the obstacle to account for arm volume
@@ -114,7 +114,7 @@ def checkPointCollision(Point, obstacles):
     for i in range(obstacles.shape[0]):
         box = scalebox(obstacles[i, :])
         # If there is a collision then return true
-        if detectCollision(points[0:8, :], points[1:9, :], box):
+        if any(detectCollision(points[0:8, :], points[1:9, :], box)):
             collision = True
             break
 
