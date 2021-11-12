@@ -29,20 +29,8 @@
   <node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
     args="pub /turntable/calibrated std_msgs/Bool true" />
 
-  <!-- <node name="spawn_turntable_controller"
-        pkg="controller_manager"
-        type="spawner"
-        output="screen"
-        launch-prefix="bash -c 'sleep $(arg control_delay); $0 $@' "
-        args="- -wait-for=/turntable/calibrated turntable_controller " >
-
-
-
-      </node> -->
-
-
       <node name="controller_spawner" pkg="controller_manager" type="controller_manager" respawn="false"
-            output="screen" args="spawn turntable_controller
+            output="screen" args="spawn turntable/turntable_controller
                                              " />
 
 
@@ -50,65 +38,7 @@
         pkg="rostopic"
         type="rostopic"
         launch-prefix="bash -c 'sleep $(arg spin_delay); $0 $@' "
-        args="pub /turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
+        args="pub /turntable/turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
 
 
 </launch>
-
-<!--
-<?xml version="1.0"?>
-<launch>
-
-
-  <arg name="table_height" default=".2" />
-
-  <param name="turntable_description" command="$(find xacro)/xacro $(find meam520_labs)/urdf/turntable.xacro" />
-
-  <rosparam command="load" file="$(find meam520_labs)/config/turntable_controller.yaml" />
-
-  <node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-param turntable_description -urdf -model turntable
-  -x 0 -y 0 -z $(arg table_height)
-  -R 0 -P 0 -Y 0
-  -robot_namespace turntable
-  " />
-
-  <node name="turntable_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
-    <remap from="robot_description" to="turntable_description" />
-    <remap from="joint_states" to="turntable_states" />
-  </node>
-
-
-
-
-  <arg name="speed" default="0.0523"/>
-  <arg name="control_delay" default="5"/>
-  <arg name="spin_delay" default="10"/>
-
-  <node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
-    args="pub /turntable/calibrated std_msgs/Bool true" />
-
-  <node name="spawn_turntable_controller"
-        pkg="controller_manager"
-        type="spawner"
-        output="screen"
-        launch-prefix="bash -c 'sleep $(arg control_delay); $0 $@' "
-        ns="/turntable"
-        >
-
-        <remap from="robot_description" to="turntable_description" />
-        <remap from="joint_states" to="turntable_states" />
-        <remap from="controller_manager/load_controller" to="/controller_manager/load_controller" />
-        <remap from="controller_manager/switch_controller" to="/controller_manager/switch_controller" />
-        <remap from="controller_manager/unload_controller" to="/controller_manager/unload_controller" />
-
-
-      </node>
-
-  <node name="spin_turntable"
-        pkg="rostopic"
-        type="rostopic"
-        launch-prefix="bash -c 'sleep $(arg spin_delay); $0 $@' "
-        args="pub /turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
-
-
-</launch> -->
