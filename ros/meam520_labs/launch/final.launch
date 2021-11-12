@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="side" />
+  <arg name="team" />
   <arg name="block_delay" default="5" />
 
   <!-- BASIC ENVIRONMENT -->
@@ -22,8 +22,8 @@
     <include file="$(find meam520_labs)/launch/single.launch">
       <arg name="load_gazebo" value="false" />
       <arg name="x" value="0"/>
-      <arg name="y" value="-.978" if="$(eval arg('side') == 'left')"/>
-      <arg name="y" value=".978" if="$(eval arg('side') == 'right')"/>
+      <arg name="y" value="-.978" if="$(eval arg('team') == 'red')"/>
+      <arg name="y" value=".978" if="$(eval arg('team') == 'blue')"/>
       <arg name="z" value="0"/>
       <arg name="roll" value="0"/>
       <arg name="pitch" value="0"/>
@@ -32,8 +32,8 @@
 
     <!-- <include file="$(find meam520_labs)/launch/dummy.launch">
       <arg name="x" value="0"/>
-      <arg name="y" value=".978" if="$(eval arg('side') == 'left')"/>
-      <arg name="y" value="-.978" if="$(eval arg('side') == 'right')"/>
+      <arg name="y" value=".978" if="$(eval arg('team') == 'left')"/>
+      <arg name="y" value="-.978" if="$(eval arg('team') == 'right')"/>
       <arg name="z" value="0"/>
       <arg name="roll" value="0"/>
       <arg name="pitch" value="0"/>

@@ -17,22 +17,28 @@
   " />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
-  <node pkg="rostopic" type="rostopic" name="fake_joint_calibration" args="pub /turntable/calibrated std_msgs/Bool true" />
 
-  <node name="default_loaded_controllers_spawner"
-    pkg="controller_manager" type="spawner" output="screen"
-    args="--wait-for=/turntable/calibrated turntable_controller " />
     <!-- joint_velocity_controller -->
 
 
 
   <arg name="speed" default="0.0523"/>  <!-- approx .5 rpm --> -->
-  <arg name="delay" default="5"/>
-  <node pkg="rostopic"
+  <arg name="control_delay" default="5"/>
+  <arg name="spin_delay" default="10"/>
+
+  <node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
+    args="pub /turntable/calibrated std_msgs/Bool true" />
+
+      <node name="controller_spawner" pkg="controller_manager" type="controller_manager" respawn="false"
+            output="screen" args="spawn turntable/turntable_controller
+                                             " />
+
+
+  <node name="spin_turntable"
+        pkg="rostopic"
         type="rostopic"
-        name="spin_turntable"
-        launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "
-        args="pub /turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
+        launch-prefix="bash -c 'sleep $(arg spin_delay); $0 $@' "
+        args="pub /turntable/turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
 
 
 </launch>
