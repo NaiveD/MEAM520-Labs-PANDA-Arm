@@ -5,10 +5,10 @@ from math import pi
 from time import perf_counter
 
 from core.interfaces import ArmController
-from Lab4.code_soln.lib.rrt import rrt
-from Lab4.code_soln.lib.astar import Astar as astar
+from    lib.rrt import rrt
+from lib.astar import Astar as astar
 
-from Lab4.code_soln.lib.loadmap import loadmap
+from lib.loadmap import loadmap
 from copy import deepcopy
 
 
