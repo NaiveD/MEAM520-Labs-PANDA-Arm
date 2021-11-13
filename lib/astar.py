@@ -11,11 +11,11 @@ def Astar(map, start, goal):
     """
     Parameters:
         maps,       struct containing map information
-        start,      inital configuration array, shape=(6,)
-        goal,       final configuration array, shape=(6,)
+        start,      inital configuration array, shape=(7,)
+        goal,       final configuration array, shape=(7,)
     Output:
         path,       configuration coordinates along the path  with
-                    shape=(N,6). These are typically the centers of visited
+                    shape=(N,7). These are typically the centers of visited
                     voxels of an occupancy map. The first point must be the
                     start and the last point must be the goal. If no path
                     exists, return None.
