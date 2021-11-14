@@ -27,8 +27,9 @@ def Astar(map, start, goal):
     goal = goal[[0,1,2,3,4,5]]
 
     # While not required, we have provided an occupancy map you may use or modify.
-    resolution = np.array([0.3, 0.4, 0.6, 0.5, 0.6, 0.5])
-    margin = 0.12
+    # resolution = np.array([0.3, 0.4, 0.6, 0.5, 0.6, 0.5])
+    resolution = np.array([0.20, 0.30, 0.50, 0.40, 0.50, 0.40])
+    margin = 0.14
     occ_map = OccupancyMap(map, resolution, margin)
 
     # Retrieve the index in the occupancy grid matrix corresponding to a position in space.
