@@ -54,7 +54,16 @@ class ObjectDetector:
         self.gazebo_data = msg
 
     def get_detected_poses(self):
+        """
 
+        Returns two lists:
+
+        names: contains the unique name of each block in play
+        poses: contains the transformation from each cube's coordinate frame to the world frame
+
+        Note: the world frame and the robot's base frame are NOT necessarily the same!
+
+        """
         data = self.gazebo_data
 
         # TODO: Add Real Detections
