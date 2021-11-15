@@ -96,7 +96,10 @@
         </bounce>
         <friction>
           <torsional>
-            <coefficient>100</coefficient>
+            <coefficient>1.0</coefficient>
+            <use_patch_radius>true</use_patch_radius>
+            <patch_radius>0.1</patch_radius>
+            <surface_radius>0.1</surface_radius>
           </torsional>
           <ode>
             <mu>100</mu>
