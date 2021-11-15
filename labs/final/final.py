@@ -31,7 +31,7 @@ if __name__ == "__main__":
     arm = ArmController()
     detector = ObjectDetector()
 
-    arm.move_to_position(arm.neutral_position()) # on your mark!
+    arm.safe_move_to_position(arm.neutral_position()) # on your mark!
 
     print("\n****************")
     if team == 'blue':
@@ -51,6 +51,6 @@ if __name__ == "__main__":
         print('\t{name} @ [{x:2.3f},{y:2.3f},{z:2.3f}]'.format(name=name,x=T[0,3],y=T[1,3],z=T[2,3]))
 
     # Move around...
-    arm.move_to_position(arm.neutral_position() + .1)
+    arm.safe_move_to_position(arm.neutral_position() + .1)
 
     # END STUDENT CODE
