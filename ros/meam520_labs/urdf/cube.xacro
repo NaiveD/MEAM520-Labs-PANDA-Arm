@@ -34,12 +34,13 @@
           <friction>
             <torsional>
               <coefficient>1.0</coefficient>
-              <use_patch_radius>0</use_patch_radius>
+              <use_patch_radius>true</use_patch_radius>
+              <patch_radius>0.0254</patch_radius>
               <surface_radius>0.0254</surface_radius>
             </torsional>
             <ode>
-              <mu>2</mu>
-              <mu2>2</mu2>
+              <mu>4</mu>
+              <mu2>4</mu2>
             </ode>
           </friction>
           <bounce>
