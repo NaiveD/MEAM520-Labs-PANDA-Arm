@@ -6,6 +6,7 @@ from math import sin, cos, pi
 import numpy as np
 from time import sleep
 import os
+import subprocess
 
 from std_msgs.msg import Float64
 
@@ -13,21 +14,15 @@ import tf
 
 rospy.init_node('block_spawner')
 
-
-# from gazebo_ros.gazebo_interface import set_model_configuration_client
-#
-# set = False
-# while not set:
-#     set = set_model_configuration_client(
-#         'panda','robot_description',
-#         ['panda_joint' + str(i+1) for i in range(7)],
-#         [ 0.0, -0.785, 0.0, -2.356, 0.0, 1.57, 0.785],
-#         'gazebo'
-#         )
-#
-
 from gazebo_msgs.srv import SpawnModel
 spawn_model_client = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
+
+
+path = os.path.expanduser('~/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro')
+command = 'rosrun xacro xacro '+path+' color:='
+colors = ["'0.043 0.611 0.192 1'","'.25 .15 .5 1'"]
+xmls = [subprocess.check_output(command+color,shell=True).decode('utf-8') for color in colors]
+
 
 count = 0
 def place(x,y,z,type):
@@ -50,7 +45,7 @@ def place(x,y,z,type):
         try:
             success = spawn_model_client(
                     model_name='cube'+str(count)+'_'+type,
-                    model_xml=open(os.path.expanduser('~/meam520_ws/src/meam520_labs/ros/meam520_labs/urdf/cube.xacro'), 'r').read(),
+                    model_xml= xmls[0] if type=='static' else xmls[1],
                     robot_namespace='/foo',
                     initial_pose=pose,
                     reference_frame='world')

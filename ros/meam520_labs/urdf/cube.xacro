@@ -63,9 +63,9 @@
           </script>
         </material> -->
         <material>
-          <ambient>.8 0 .8 1</ambient>
-          <diffuse>.8 0 .8 1</diffuse>
-          <specular>.8 0 .8 1</specular>
+          <ambient>$(arg color)</ambient>
+          <diffuse>$(arg color)</diffuse>
+          <specular>$(arg color)</specular>
           <emissive>0 0 0 0</emissive>
         </material>
     </visual>

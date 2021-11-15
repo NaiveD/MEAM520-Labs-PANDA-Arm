@@ -30,7 +30,7 @@
 
 
   <node name="turntable_controller_spawner" pkg="controller_manager" type="spawner"
-    output="screen" respawn="false" args="turntable/turntable_controller --timeout 0"/>
+    output="screen" respawn="false" args="turntable/turntable_controller"/>
 
 <!-- launch-prefix="bash -c 'sleep $(arg control_delay); $0 $@' "  -->
 
