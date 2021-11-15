@@ -4,6 +4,8 @@
   <arg name="team" />
   <arg name="block_delay" default="5" />
 
+  <param name="team" value="$(arg team)" />
+
   <!-- BASIC ENVIRONMENT -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find meam520_labs)/worlds/final.world"/>

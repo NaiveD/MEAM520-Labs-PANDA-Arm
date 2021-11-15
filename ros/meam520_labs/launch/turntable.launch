@@ -22,23 +22,21 @@
 
 
 
-  <arg name="speed" default="0.0523"/>  <!-- approx .5 rpm --> -->
-  <arg name="control_delay" default="5"/>
-  <arg name="spin_delay" default="10"/>
+  <arg name="control_delay" default="1"/>
 
   <node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
     args="pub /turntable/calibrated std_msgs/Bool true" />
 
       <node name="controller_spawner" pkg="controller_manager" type="controller_manager" respawn="false"
-            output="screen" args="spawn turntable/turntable_controller
-                                             " />
+            output="screen" args="spawn turntable/turntable_controller"
+            launch-prefix="bash -c 'sleep $(arg control_delay); $0 $@' " />
 
 
-  <node name="spin_turntable"
+  <!-- <node name="spin_turntable"
         pkg="rostopic"
         type="rostopic"
         launch-prefix="bash -c 'sleep $(arg spin_delay); $0 $@' "
-        args="pub /turntable/turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/>
+        args="pub /turntable/turntable/turntable_controller/command std_msgs/Float64 $(arg speed) -r 1"/> -->
 
 
 </launch>

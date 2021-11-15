@@ -47,31 +47,27 @@ from core.utils import time_in_seconds
 class ObjectDetector:
 
     def __init__(self):
-        self.model_sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.model_cb);
-        self.model_data = None
+        self.gazebo_sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.gazebo_cb);
+        self.gazebo_data = None
 
-    def model_cb(self, msg):
-        self.model_data = msg
+    def gazebo_cb(self, msg):
+        self.gazebo_data = msg
 
-    def get_object_state(self):
+    def get_detected_poses(self):
 
-        data = self.model_data
+        data = self.gazebo_data
+
+        # TODO: Add Real Detections
+
+        # Simulated Detections
 
         if data is None:
-            return [], [], []
+            return [], []
 
         cubes = [i for i, name in enumerate(data.name) if "cube" in name]
         name =  [name for name in data.name if "cube" in name]
-        twist = []
         pose = []
         for cube in cubes:
-            twist.append( np.array([
-                data.twist[cube].linear.x,
-                data.twist[cube].linear.y,
-                data.twist[cube].linear.z,
-                data.twist[cube].angular.x,
-                data.twist[cube].angular.y,
-                data.twist[cube].angular.z ]) )
             p = np.array([
                 data.pose[cube].position.x,
                 data.pose[cube].position.y,
@@ -84,7 +80,7 @@ class ObjectDetector:
             T[:3,3] = p;
             pose.append(T)
 
-        return name, pose, twist
+        return name, pose
 
 class ArmController(franka_interface.ArmInterface):
     """

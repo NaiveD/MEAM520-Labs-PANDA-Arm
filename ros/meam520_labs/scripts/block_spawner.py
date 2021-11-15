@@ -7,6 +7,8 @@ import numpy as np
 from time import sleep
 import os
 
+from std_msgs.msg import Float64
+
 import tf
 
 rospy.init_node('block_spawner')
@@ -63,17 +65,24 @@ def noise(radius):
 
 for i in [-1,1]:
     for j in [-1,1]:
-        x = .562 + 3*.0254 * i
-        y = 1.147 + 3*.0254 * j
-        place(x + noise(.01) ,y + noise(.01),.23,'static')
-        place(x + noise(.01) ,-y + noise(.01),.23,'static')
+        x = .562 + 2.5*.0254 * i
+        y = 1.147 + 2.5*.0254 * j
+        place(x + noise(.025) ,y + noise(.025),.23,'static')
+        place(x + noise(.025) ,-y + noise(.025),.23,'static')
 
-n = 8
-r = .2
+n = 10
+r = 9.5*.0254
 for i in range(n):
-    place((r + noise(r/5)) * cos(2*pi/n * (i + noise(pi/n))),(r + noise(r/5)) * sin(2*pi/n * (i + noise(pi/n))),.23,'dynamic')
+    place((r + noise(.0254)) * cos(2*pi/n * (i + noise(pi/n))),(r + noise(r/5)) * sin(2*pi/n * (i + noise(pi/n))),.23,'dynamic')
 
 
 
-# pause_physics_client=rospy.ServiceProxy('/gazebo/unpause_physics',Empty)
-# pause_physics_client(EmptyRequest())
+spin_pub = rospy.Publisher('/turntable/turntable/turntable_controller/command',Float64,queue_size=1)
+msg = Float64()
+msg.data = .0523 # about .5 rpm
+
+r = rospy.Rate(1) # Hz
+while not rospy.is_shutdown():
+    spin_pub.publish(msg)
+    # rospy.loginfo('spinning turntable')
+    r.sleep()

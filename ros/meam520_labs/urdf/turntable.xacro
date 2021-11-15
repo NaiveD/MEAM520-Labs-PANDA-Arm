@@ -82,7 +82,12 @@
     <material>Gazebo/DarkGrey</material>
   </gazebo>
   <gazebo reference="upper_base">
-    <material>Gazebo/LightGrey</material>
+    <material>
+      <ambient>.8 .8 .8 1</ambient>
+      <diffuse>.8 .8 .8 1</diffuse>
+      <specular>.8 .8 .8 1</specular>
+      <emissive>0 0 0 0</emissive>
+    </material>
     <collision>
       <surface>
         <bounce>
