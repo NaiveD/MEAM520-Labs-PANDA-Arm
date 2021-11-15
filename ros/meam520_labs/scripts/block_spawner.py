@@ -76,8 +76,8 @@ spin_pub = rospy.Publisher('/turntable/turntable/turntable_controller/command',F
 msg = Float64()
 msg.data = .0523 # about .5 rpm
 
+rospy.loginfo('spinning turntable...')
 r = rospy.Rate(1) # Hz
 while not rospy.is_shutdown():
     spin_pub.publish(msg)
-    # rospy.loginfo('spinning turntable')
     r.sleep()
