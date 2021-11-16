@@ -38,9 +38,11 @@ import quaternion
 import numpy as np
 import franka_interface
 import itertools
+import tf
 
 from gazebo_msgs.msg import ModelStates
 from tf.transformations import quaternion_matrix
+import std_msgs.msg
 
 from core.utils import time_in_seconds
 
@@ -49,47 +51,87 @@ class ObjectDetector:
     def __init__(self):
         self.gazebo_sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.gazebo_cb);
         self.gazebo_data = None
+        self.listener = tf.TransformListener()
+
+        self.detections = {}
+
+        # for sim only
+        self.world_to_camera = None
+        self.calibration_to_camera = None
+
+    ################
+    ## SIMULATION ##
+    ################
+
+    def get_pose_from_tf(self,frame,target='camera'):
+        # get transform from frame to target
+        try:
+            header = std_msgs.msg.Header()
+            header.stamp = rospy.Time(0)
+            header.frame_id = frame
+            return self.listener.asMatrix(target,header)
+        except (tf.ExtrapolationException, tf.ConnectivityException, tf.LookupException) as e:
+            return None
 
     def gazebo_cb(self, msg):
-        self.gazebo_data = msg
+
+        world = self.get_pose_from_tf('world_frame')
+        if world is not None:
+            self.world_to_camera = world
+
+        calibration = self.get_pose_from_tf('calibration_tag')
+        if calibration is not None:
+            self.calibration_to_camera = calibration
+
+        if self.world_to_camera is None:
+            return # can't use any data cuz missing camera frame transform
+        else:
+            if self.calibration_to_camera is not None:
+                self.detections['calibration_tag'] = calibration
+            # update state of all detections
+            for name, pose in zip(msg.name,msg.pose):
+                if "cube" in name or "tag" in name:
+                    T = quaternion_matrix([
+                        pose.orientation.x,
+                        pose.orientation.y,
+                        pose.orientation.z,
+                        pose.orientation.w ])
+                    T[:3,3] = np.array([
+                        pose.position.x,
+                        pose.position.y,
+                        pose.position.z ]);
+                    self.detections[name] = self.world_to_camera @ T
+
+            return name, pose
+
+    ##############
+    ## HARDWARE ##
+    ##############
+
+    def vision_cb(self, msg):
+        # TODO: implement!
+        # for each object detected, set self.detections[name] = pose
+        pass
+
+    ############
+    ## CLIENT ##
+    ############
 
     def get_detected_poses(self):
         """
 
         Returns two lists:
 
-        names: contains the unique name of each block in play
-        poses: contains the transformation from each cube's coordinate frame to the world frame
-
-        Note: the world frame and the robot's base frame are NOT necessarily the same!
+        names: contains the unique name of each detected object that has been detected since last poll of this method
+        poses: contains the transformation from each object's coordinate frame to the camera frame
 
         """
-        data = self.gazebo_data
+        detections = dict(self.detections) # to copy
+        self.detections = {} # clear detections
+        return detections
 
-        # TODO: Add Real Detections
 
-        # Simulated Detections
 
-        if data is None:
-            return [], []
-
-        cubes = [i for i, name in enumerate(data.name) if "cube" in name]
-        name =  [name for name in data.name if "cube" in name]
-        pose = []
-        for cube in cubes:
-            p = np.array([
-                data.pose[cube].position.x,
-                data.pose[cube].position.y,
-                data.pose[cube].position.z ]) # in m
-            T = quaternion_matrix([
-                data.pose[cube].orientation.x,
-                data.pose[cube].orientation.y,
-                data.pose[cube].orientation.z,
-                data.pose[cube].orientation.w ])
-            T[:3,3] = p;
-            pose.append(T)
-
-        return name, pose
 
 class ArmController(franka_interface.ArmInterface):
     """
