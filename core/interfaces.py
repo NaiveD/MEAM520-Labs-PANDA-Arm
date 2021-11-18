@@ -38,97 +38,127 @@ import quaternion
 import numpy as np
 import franka_interface
 import itertools
-import tf
 
-from gazebo_msgs.msg import ModelStates
+from gazebo_msgs.msg import LinkStates, ModelStates
+from geometry_msgs.msg import Pose
 from tf.transformations import quaternion_matrix
 import std_msgs.msg
+from math import acos, sin, cos, pi
 
-from core.utils import time_in_seconds
+from core.utils import time_in_seconds, transform
 
 class ObjectDetector:
 
     def __init__(self):
+
+        self.detection_angle = 50 * np.pi / 180.0
+        self.fov = 85 * np.pi / 180.0
+        self.tag_to_block_transforms = self.generate_tag_to_block_transforms()
+
         self.gazebo_sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.gazebo_cb);
         self.gazebo_data = None
-        self.listener = tf.TransformListener()
 
-        self.detections = {}
-
-        # for sim only
-        self.world_to_camera = None
-        self.calibration_to_camera = None
+        self.detections = []
 
     ################
     ## SIMULATION ##
     ################
 
-    def get_pose_from_tf(self,frame,target='camera'):
-        # get transform from frame to target
-        try:
-            header = std_msgs.msg.Header()
-            header.stamp = rospy.Time(0)
-            header.frame_id = frame
-            return self.listener.asMatrix(target,header)
-        except (tf.ExtrapolationException, tf.ConnectivityException, tf.LookupException) as e:
-            return None
+    # Simualated tag detection!
 
-    def gazebo_cb(self, msg):
+    def generate_tag_to_block_transforms(self,r=.025):
+        transforms = []
+        for i in range(4):
+            x = np.array([r,0,0])
+            rpy = np.array([0,-pi/2,pi/2])
+            T = transform(np.zeros(3),np.array([0,0,pi/2 * i])) @ transform(x,rpy)
+            transforms.append(T)
+        for j in [-1,1]:
+            x = r * np.array([0,0,j])
+            rpy = np.array([0,pi * (j - 1)/2,-pi/2+pi * (j - 1)/2])
+            T = transform(x,rpy)
+            transforms.append(T)
+        return transforms
 
-        world = self.get_pose_from_tf('world_frame')
-        if world is not None:
-            self.world_to_camera = world
+    def get_tag_to_block_transform(self,id):
+        index = id - 1 if id <= 6 else id - 1 - 6
+        return self.tag_to_block_transforms[index]
 
-        calibration = self.get_pose_from_tf('calibration_tag')
-        if calibration is not None:
-            self.calibration_to_camera = calibration
+    def gazebo_cb(self,msg):
 
-        if self.world_to_camera is None:
-            return # can't use any data cuz missing camera frame transform
+        # get world to camera first
+        for (name,pose) in zip(msg.name,msg.pose):
+            if 'camera' in name:
+                world_to_camera = np.linalg.inv(self.pose_to_transform(pose))
+
+        # find all tags in environment
+        tags = []
+        for (name,pose) in zip(msg.name,msg.pose):
+            if 'cube' in name: # cubes - generate virtual tags
+                block_to_world = self.pose_to_transform(pose)
+                for idx in range(6):
+                    id = idx + 1 if 'static' in name else idx + 6 + 1
+                    tag_to_block = self.get_tag_to_block_transform(id)
+                    tag_to_camera =  world_to_camera @ block_to_world @ tag_to_block
+                    tag = ('tag'+str(id),tag_to_camera)
+                    tags.append(tag)
+            if 'tag' in name: # for real calibration tag(s) on table
+                tag_to_world = self.pose_to_transform(pose)
+                tag_to_camera =  world_to_camera @ tag_to_world
+                tag = (name,tag_to_camera)
+                tags.append(tag)
+
+        tags = [tag for tag in tags if self.check_tag_visibility(tag)]
+        self.detections = tags
+
+    def angle(self,v1,v2):
+        return acos(min(1,max(-1,np.dot(v1,v2))))
+
+    def check_tag_visibility(self,tag):
+        (name, T) = tag
+        z = T[:3,2] # tag frame
+        x = T[:3,3] # tag position
+        ray = x / np.linalg.norm(x)
+        if self.angle(z,-ray) > self.detection_angle:
+            # angle between camera vector and cube too steep for detection
+            return False
+        elif self.angle(np.array([0,0,1]),ray) > self.fov/2:
+            # outside view cone
+            return False
         else:
-            if self.calibration_to_camera is not None:
-                self.detections['calibration_tag'] = calibration
-            # update state of all detections
-            for name, pose in zip(msg.name,msg.pose):
-                if "cube" in name or "tag" in name:
-                    T = quaternion_matrix([
-                        pose.orientation.x,
-                        pose.orientation.y,
-                        pose.orientation.z,
-                        pose.orientation.w ])
-                    T[:3,3] = np.array([
-                        pose.position.x,
-                        pose.position.y,
-                        pose.position.z ]);
-                    self.detections[name] = self.world_to_camera @ T
+            return True
 
-            return name, pose
+    def pose_to_transform(self,pose):
+        T = quaternion_matrix([
+            pose.orientation.x,
+            pose.orientation.y,
+            pose.orientation.z,
+            pose.orientation.w ])
+        T[:3,3] = np.array([
+            pose.position.x,
+            pose.position.y,
+            pose.position.z ]);
+        return T
+
 
     ##############
     ## HARDWARE ##
     ##############
 
+
     def vision_cb(self, msg):
         # TODO: implement!
-        # for each object detected, set self.detections[name] = pose
         pass
 
     ############
     ## CLIENT ##
     ############
 
-    def get_detected_poses(self):
+    def get_detections(self):
         """
 
-        Returns two lists:
-
-        names: contains the unique name of each detected object that has been detected since last poll of this method
-        poses: contains the transformation from each object's coordinate frame to the camera frame
-
         """
-        detections = dict(self.detections) # to copy
-        self.detections = {} # clear detections
-        return detections
+        return self.detections.copy()
 
 
 

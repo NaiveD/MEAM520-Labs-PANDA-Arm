@@ -58,6 +58,8 @@ def noise(radius):
     return radius * (np.random.rand(1) - .5)
 
 
+# for i in [1]:
+#     for j in [1]:
 for i in [-1,1]:
     for j in [-1,1]:
         x = .562 + 2.5*.0254 * i
@@ -65,7 +67,8 @@ for i in [-1,1]:
         place(x + noise(.025) ,y + noise(.025),.23,'static')
         place(x + noise(.025) ,-y + noise(.025),.23,'static')
 
-n = 10
+# n = 1
+n = 8
 r = 9.5*.0254
 for i in range(n):
     place((r + noise(.0254)) * cos(2*pi/n * (i + noise(pi/n))),(r + noise(r/5)) * sin(2*pi/n * (i + noise(pi/n))),.23,'dynamic')
