@@ -44,11 +44,9 @@ if __name__ == "__main__":
 
     # STUDENT CODE HERE
 
-    # Detect some objects...
-    detections = detector.get_detected_poses()
-    print("\nDetected Objects:")
-    for name, T in detections.items():
-        print('\t{name} @ [{x:2.3f},{y:2.3f},{z:2.3f}]'.format(name=name,x=T[0,3],y=T[1,3],z=T[2,3]))
+    # Detect some tags...
+    for (name, pose) in detector.get_detections():
+         print(name,'\n',pose)
 
     # Move around...
     arm.safe_move_to_position(arm.neutral_position() + .1)
