@@ -38,6 +38,9 @@ import quaternion
 import numpy as np
 import franka_interface
 import itertools
+from core.safety import Safety
+from core.utils import time_in_seconds
+from franka_core_msgs.msg import JointCommand
 
 from gazebo_msgs.msg import LinkStates, ModelStates
 from geometry_msgs.msg import Pose
@@ -449,7 +452,7 @@ class ArmController(franka_interface.ArmInterface):
     #######################
 
 
-    def move_to_position(self, joint_angles, timeout=10.0, threshold=0.00085, test=None):
+    def move_to_position(self, joint_angles, timeout=10.0, threshold=0.00085, test=None, is_safe=False):
         """
         Move to joint position specified (attempts to move with trajectory action client).
         This function will smoothly interpolate between the start and end positions
@@ -469,6 +472,8 @@ class ArmController(franka_interface.ArmInterface):
          move is considered successful [0.00085]
         :param test: optional function returning True if motion must be aborted
         """
+        if is_safe==False:
+            raise Exception("!!!++++++++++++++++++++++++++You are not using safe command!!!++++++++++++++++++++++++++++++++!!!")
         self.move_to_joint_positions(
             self._format_command_with_limits(joint_angles), timeout=timeout, threshold=threshold, test=test, use_moveit=False)
 
@@ -563,3 +568,64 @@ class ArmController(franka_interface.ArmInterface):
         torque_command = dict(zip(joint_names, cmd))
 
         self.set_joint_torques(torque_command)
+
+
+    def set_joint_positions_velocities(self, positions, velocities, is_safe=False):
+        """
+        Commands the joints of this limb using specified positions and velocities using impedance control.
+        Command at time t is computed as:
+
+        :math:`u_t= coriolis\_factor * coriolis\_t + K\_p * (positions - curr\_positions) +  K\_d * (velocities - curr\_velocities)`
+
+
+        :type positions: [float]
+        :param positions: desired joint positions as an ordered list corresponding to joints given by self.joint_names()
+        :type velocities: [float]
+        :param velocities: desired joint velocities as an ordered list corresponding to joints given by self.joint_names()
+        """
+        if is_safe==False:
+            raise Exception("!!!++++++++++++++++++++++++++You are not using safe command!!!++++++++++++++++++++++++++++++++!!!")
+        self._command_msg.names = self._joint_names
+        self._command_msg.position = positions
+        self._command_msg.velocity = velocities
+        self._command_msg.mode = JointCommand.IMPEDANCE_MODE
+        self._command_msg.header.stamp = rospy.Time.now()
+        self._joint_command_publisher.publish(self._command_msg)
+
+    
+    def safe_move_to_position(self, joint_angles, timeout=10.0, threshold=0.00085, test=None):
+        # The safety layer
+        cur_safe = self.safe.test_new_configuration(joint_angles)
+
+        if cur_safe == True:
+            self.move_to_position(joint_angles, timeout, threshold, test, is_safe=True)
+        else:
+            print("Robot will hit the table!!! Aborting the current configuration.")
+
+    def safe_set_joint_positions_velocities(self, positions, velocities):
+        # The safety layer
+        cur_safe = self.safe.test_new_configuration(positions)
+
+        # Compute if the pose is safe
+        pose_thresh = 0.25 # in rad
+        cur_pose = self.get_positions(False)
+
+        pose_dist = np.linalg.norm(positions - cur_pose)
+        
+        # Comput if the velocity is safe
+        vel_thresh = 0.25
+        cur_vel = self.get_velocities(False)
+
+        vel_dist = np.linalg.norm(velocities - cur_vel)
+
+        if pose_dist > pose_thresh:
+            print("Next provided pose is too far. Aborting the current configuration")
+        elif vel_dist > vel_thresh:
+            print("Next provided velocity is too fast. Aborting the current configruation")
+        elif cur_safe == False: 
+            print("Robot will hit the table!!! Aborting the current configuration.")
+        else:
+            self.set_joint_positions_velocities(positions, velocities, is_safe=True) # for impedance control
+
+
+    
