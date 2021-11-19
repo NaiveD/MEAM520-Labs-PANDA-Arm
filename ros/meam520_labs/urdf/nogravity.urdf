@@ -216,6 +216,11 @@
     </visual>
     <collision>
       <geometry>
+        <mesh filename="package://franka_panda_description/meshes/collision/link5.stl"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+      <geometry>
         <mesh filename="package://franka_panda_description/meshes/collision/link5_1.stl"/>
       </geometry>
     </collision>
@@ -228,7 +233,7 @@
       <geometry>
         <mesh filename="package://franka_panda_description/meshes/collision/link5_3.stl"/>
       </geometry>
-    </collision>
+    </collision> -->
     <inertial>
       <origin rpy="0 0 0" xyz="-1.1953e-02 4.1065e-02 -3.8437e-02"/>
       <mass value="1.225946"/>

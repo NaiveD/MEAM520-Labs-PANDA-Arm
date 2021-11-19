@@ -25,9 +25,9 @@ if __name__ == "__main__":
 
     detector = ObjectDetector()
 
-    # r = rospy.Rate(10) # Hz
+    r = rospy.Rate(10) # Hz
     while not rospy.is_shutdown():
-        # r.sleep()
+        r.sleep()
         detections = detector.get_detections()
         print(len(detections),'tags detected')
 
