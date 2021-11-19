@@ -226,6 +226,8 @@ class ArmController(franka_interface.ArmInterface):
 
         self._arm_configured = True
 
+        self.safe = Safety()
+
 
     def _configure(self, on_state_callback):
 
@@ -592,7 +594,7 @@ class ArmController(franka_interface.ArmInterface):
         self._command_msg.header.stamp = rospy.Time.now()
         self._joint_command_publisher.publish(self._command_msg)
 
-    
+
     def safe_move_to_position(self, joint_angles, timeout=10.0, threshold=0.00085, test=None):
         # The safety layer
         cur_safe = self.safe.test_new_configuration(joint_angles)
@@ -611,7 +613,7 @@ class ArmController(franka_interface.ArmInterface):
         cur_pose = self.get_positions(False)
 
         pose_dist = np.linalg.norm(positions - cur_pose)
-        
+
         # Comput if the velocity is safe
         vel_thresh = 0.25
         cur_vel = self.get_velocities(False)
@@ -622,10 +624,7 @@ class ArmController(franka_interface.ArmInterface):
             print("Next provided pose is too far. Aborting the current configuration")
         elif vel_dist > vel_thresh:
             print("Next provided velocity is too fast. Aborting the current configruation")
-        elif cur_safe == False: 
+        elif cur_safe == False:
             print("Robot will hit the table!!! Aborting the current configuration.")
         else:
             self.set_joint_positions_velocities(positions, velocities, is_safe=True) # for impedance control
-
-
-    
