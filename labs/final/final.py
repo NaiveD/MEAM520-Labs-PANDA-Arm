@@ -14,7 +14,7 @@ from core.utils import time_in_seconds
 
 # The library you implemented over the course of this semester!
 from lib.calculateFK import FK
-from lib.calcJacobian import FK
+from lib.calcJacobian import calcJacobian
 from lib.solveIK import IK
 from lib.rrt import rrt
 from lib.loadmap import loadmap
