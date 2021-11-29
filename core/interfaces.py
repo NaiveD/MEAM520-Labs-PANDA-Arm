@@ -615,7 +615,7 @@ class ArmController(franka_interface.ArmInterface):
         pose_dist = np.linalg.norm(positions - cur_pose)
 
         # Comput if the velocity is safe
-        vel_thresh = 0.25
+        vel_thresh = 10.0
         cur_vel = self.get_velocities(False)
 
         vel_dist = np.linalg.norm(velocities - cur_vel)
