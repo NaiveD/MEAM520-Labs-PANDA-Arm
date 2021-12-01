@@ -23,7 +23,7 @@ arm.set_arm_speed(.2)
 arm.close_gripper()
 
 q = arm.neutral_position()
-arm.move_to_position(q)
+arm.safe_move_to_position(q)
 arm.open_gripper()
 
 # Joint angles in radians (7-DoF)
@@ -71,8 +71,8 @@ arm.open_gripper()
 # arm.move_to_position(q)
 
 # Bad seed in Lab 3
-q = np.array([pi/2,0,-0,-pi/4,0,pi,0])
-arm.move_to_position(q)
+# q = np.array([pi/2,0,-0,-pi/4,0,pi,0])
+# arm.move_to_position(q)
 
 
 arm.close_gripper()

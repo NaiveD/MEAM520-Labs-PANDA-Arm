@@ -3,6 +3,8 @@ import math
 import numpy as np
 from math import pi
 import functools as func
+from core.interfaces import ArmController
+import rospy
 
 
 class FK():
@@ -190,3 +192,9 @@ if __name__ == "__main__":
 
     print("Joint Positions:\n", joint_positions)
     print("End Effector Pose:\n", T0e)
+
+    rospy.init_node("team_script")
+    arm = ArmController()
+    jp,target = fk.forward(arm.neutral_position())
+    print("neutral config: ", arm.neutral_position())
+    print("neutral position: ", target)
