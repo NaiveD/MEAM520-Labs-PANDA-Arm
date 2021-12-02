@@ -14,7 +14,7 @@ from core.utils import time_in_seconds
 
 # The library you implemented over the course of this semester!
 from lib.calculateFK import FK
-from lib.calcJacobian import FK
+from lib.calcJacobian import calcJacobian
 from lib.solveIK import IK
 from lib.rrt import rrt
 from lib.loadmap import loadmap
@@ -345,8 +345,8 @@ if __name__ == "__main__":
     print("MAX_STACK_HEIGHT = ", MAX_STACK_HEIGHT)
     MAX_STACK_HEIGHT = 1;
 
-    #test_1(detector, arm);
-    test_3(detector,arm);
+    test_4(detector, arm);
+    # test_3(detector,arm);
 
 
     #fk = FK();
