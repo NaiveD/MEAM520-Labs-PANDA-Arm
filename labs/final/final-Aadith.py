@@ -77,14 +77,16 @@ def grab_static_block(block, arm):
 
     # target[:,3] = block[:,3] # Position of the block
     # target[2,3] += 0.1 # move exactly above the block and position ourselves.
-    target1 = block
-    target2 = block 
-    target3 = block
-    target4 = block
-    targets = [target1, target2, target3, target4]
-    # print(target1)
-    # print(block)
+    target1 = copy.deepcopy(block)
+    target2 = copy.deepcopy(block) 
+    target3 = copy.deepcopy(block)
+    target4 = copy.deepcopy(block)
+    print("block = ", block)
+    print("target1 = ", target1)
+    
     target1[:, 2] = -block[:, 2]
+    print("block = ", block)
+    print("target1 = ", target1)
     target2[:, 2] = -block[:, 2]
     target3[:, 2] = -block[:, 2]
     target4[:, 2] = -block[:, 2]
@@ -96,16 +98,21 @@ def grab_static_block(block, arm):
     target4[:, 0] = -block[:, 1]
     target4[:, 1] = -block[:, 0]
 
+    targets = [target1, target2, target3, target4]
+
     # Find IK for required target (currently, right above the required block)
     success = False;
     # while not success:    
     #     q_goal,success,xx = ik.inverse(target, q_static_block_point);
     # print(q_goal);
 
-    for target in targets:
-        q_goal,success,xx = ik.inverse(target, q_static_block_point)
+    for t in targets:
+        q_goal,success,xx = ik.inverse(t, q_static_block_point)
+
         if success == True:
+            print("succeed")
             break
+        print("fail")
 
     #Move to target
     arm.open_gripper();
