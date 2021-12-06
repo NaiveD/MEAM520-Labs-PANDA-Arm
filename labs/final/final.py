@@ -20,7 +20,7 @@ from lib.rrt import rrt
 from lib.loadmap import loadmap
 from math import pi
 import copy
-
+import math
 
 ################################### HELPER FUNCTION ENVIRONMENT #############################################
 fk = FK();
@@ -32,15 +32,15 @@ MAX_STACK_HEIGHT = 1
 team = "blue"
 
 
-
-
 def read_camera(data): #Gives a list of transforms for the top face of each static blocks only
     """
         Input: 
             data: detector.get_detections()
 
-        Returns: a list of transformation matrices for the top face of each static block
+        Returns: 
+            a list of transformation matrices for the top face of each static block
     """
+
     ground = ["tag0"]
     static_blocks = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]  #The list all tags read in the static block side
     blocks = []
@@ -71,10 +71,16 @@ def read_camera(data): #Gives a list of transforms for the top face of each stat
                 else:
                     blocks += [block]                                    #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
 
-    return blocks+white_blocks
+    return blocks + white_blocks
     
-    
- ########################################################### DYNAMIC BLOCKS ###########################################################################
+#find the angle at which a given rotation matrix has rot
+def get_rotation_about_z(rot):
+    return math.atan2(rot[1,0],rot[0,0]);
+
+################################### END HELPER FUNCTION ENVIRONMENT #############################################
+
+
+########################################################### DYNAMIC BLOCKS ###########################################################################
 def has_gripped_block(arm):
     
     arm.exec_gripper_cmd(0.03, 100)
@@ -165,12 +171,10 @@ def grab_dynamic_block(arm):
     #move to neutral position
     arm.safe_move_to_position(arm.neutral_position())
  
- 
- 
- 
- ############################################################ END DYNAMIC #################################################################################
-    
-    
+####################################################### END DYNAMIC BLOCKS ###########################################################################    
+
+
+########################################################### STATIC BLOCKS ###########################################################################
 #This function takes a block transform as input, and picks up that block and takes it to the center position
 def grab_static_block(block, arm):
     #A seed for the IK - from a position nearby the blocks
@@ -322,12 +326,7 @@ def drop_static_block(target, arm,stack_no = 1):
     arm.safe_move_to_position(arm.neutral_position())
     print("Done moving")
 
-import math
-#find the angle at which a given rotation matrix has rot
-def get_rotation_about_z(rot):
-    return math.atan2(rot[1,0],rot[0,0]);
-
-
+######################################################## END STATIC BLOCKS ###########################################################################
 
 
 ############################ TESTING ENVIRONMENTS ################################
@@ -433,9 +432,6 @@ def test_4(detector, arm): #stack 2 stacks of 2
         drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
         stack = stack+1;
 
-
-
-
 def dynamic_test(detector,arm):
      #This function reads and identifies all the static blocks in the field by their top tag
     static_blocks = read_camera(detector.get_detections());
@@ -458,13 +454,11 @@ def dynamic_test(detector,arm):
     	drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
     	stack += 1;
 	
-
-
 def save_readings():
     pass;
     #save camera readings on a file
 
-
+############################ END TESTING ENVIRONMENTS ################################
 
 
 ############################################################################### MAIN #############################################################################
