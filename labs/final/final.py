@@ -163,7 +163,7 @@ def grab_dynamic_block(arm):
  
  
  
- ############################################################END DYNAMIC #################################################################################
+ ############################################################ END DYNAMIC #################################################################################
     
     
 #This function takes a block transform as input, and picks up that block and takes it to the center position
@@ -204,6 +204,7 @@ def grab_static_block(block, arm):
 
 
     ## ---  ANGLE CODE   --- ###
+    # Only for setting the last joint
 
     target1 = copy.deepcopy(block)
     target2 = copy.deepcopy(block)
@@ -253,7 +254,7 @@ def grab_static_block(block, arm):
             break
         print("fail")
 
-    ## ---               --- ##
+    ## --- END ANGLE CODE  --- ##
 
     ## Rotate last joint to match the block angle above the target
     q_goal[-1] = q_goal_angle[-1];
@@ -274,6 +275,7 @@ def grab_static_block(block, arm):
     #close gripper
     arm.exec_gripper_cmd(arm._gripper.MIN_WIDTH, 10 )
     #arm.close_gripper();
+
     #move to neutral position
     arm.safe_move_to_position(arm.neutral_position())
     print(arm.get_gripper_state())
@@ -341,28 +343,6 @@ def test_1(detector, arm): #Pick and place 1 block
     grab_static_block(block,arm); #Grab the block from the table
     drop_static_block(drop_target_copy,arm); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
 
-def test_3(detector, arm): #Stacks all blocks using table height **
-    static_blocks = read_camera(detector.get_detections());
-
-
-    print("Neutral Position : ",arm.neutral_position())
-    ##The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
-    _,drop_target =fk.forward(arm.neutral_position());
-    drop_target[:,3] = static_blocks[0][:,3];
-    drop_target[1,3] = -drop_target[1,3]
-    drop_target[2,3] = TABLE_HEIGHT
-
-
-    ##The stack number of this particular block
-    stack = 1;
-    ##pick each block and place it, stacking them one on top of the other
-    for block in static_blocks:
-        drop_target_copy = copy.deepcopy(drop_target)
-        grab_static_block(block,arm); #Grab the block from the table
-        drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
-        stack = stack+1;
-
-
 def test_2(detector, arm): #Use their own Z estimate and see how bad it is
     print("Executing Test 2 : Completely using the Z estimates from the camera")
 
@@ -387,6 +367,27 @@ def test_2(detector, arm): #Use their own Z estimate and see how bad it is
         drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
         stack = stack+1;
         pass;
+
+def test_3(detector, arm): #Stacks all blocks using table height **
+    static_blocks = read_camera(detector.get_detections());
+
+
+    print("Neutral Position : ",arm.neutral_position())
+    ##The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
+    _,drop_target =fk.forward(arm.neutral_position());
+    drop_target[:,3] = static_blocks[0][:,3];
+    drop_target[1,3] = -drop_target[1,3]
+    drop_target[2,3] = TABLE_HEIGHT
+
+
+    ##The stack number of this particular block
+    stack = 1;
+    ##pick each block and place it, stacking them one on top of the other
+    for block in static_blocks:
+        drop_target_copy = copy.deepcopy(drop_target)
+        grab_static_block(block,arm); #Grab the block from the table
+        drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
+        stack = stack+1;
 
 def test_4(detector, arm): #stack 2 stacks of 2
     print("Executing Test 4 : Stacking 2 blocks of 2, using table height")
@@ -490,8 +491,8 @@ if __name__ == "__main__":
     MAX_STACK_HEIGHT = 1;
 
     #test_1(detector, arm);
-    #test_3(detector,arm);
-    dynamic_test(detector,arm)
+    test_3(detector,arm);
+    #dynamic_test(detector,arm)
 
     
 
