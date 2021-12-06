@@ -176,12 +176,12 @@ def grab_dynamic_block(arm):
 ########################################################### STATIC BLOCKS ###########################################################################
 #This function takes a block transform as input, and picks up that block and takes it to the center position
 def grab_static_block(block, arm):
-    #A seed for the IK - from a position nearby the blocks
+    # A seed for the IK - from a position nearby the table for the static blocks
     q_static_block_point = np.array([ 0.19597102,  0.02002129  ,0.17654651 ,-2.11382587  ,0.03078337 , 2.10129901 ,1.11344131]);
 
-    limits_last_joint = [-2.8973,2.8973]
+    # limits_last_joint = [-2.8973,2.8973]
 
-    jp,target = fk.forward(arm.neutral_position());
+    jp,target = fk.forward(arm.neutral_position()); # The transformation of the end effector when the arm is in the neutral position
 
     #Calculate the angle about Z axis that the block is oriented in : We use this to turn the last joint of the Robot to match the block
     ##   Needs more debugging ##
@@ -195,9 +195,10 @@ def grab_static_block(block, arm):
 
 
     # # ---  Move above block --- ##
-
+    # Set the position of the target end effector to be the same as the block
+    # The orientation of the target end effector is kept the same as the neutral position
     target[:,3] =  block[:,3] #TABLE_HEIGHT
-    target[2,3] = TABLE_HEIGHT - BLOCK_HEIGHT/3;
+    target[2,3] = TABLE_HEIGHT - BLOCK_HEIGHT/3; # z position of the target end effector
     target[2,3] += 0.1 # move exactly above the block and position ourselves.
 
     # Find IK for required target (currently, right above the required block)
@@ -218,12 +219,8 @@ def grab_static_block(block, arm):
     target2 = copy.deepcopy(block)
     target3 = copy.deepcopy(block)
     target4 = copy.deepcopy(block)
-    #print("block = ", block)
-    #print("target1 = ", target1)
 
     target1[:, 2] = -block[:, 2]
-    #print("block = ", block)
-    #print("target1 = ", target1)
     target2[:, 2] = -block[:, 2]
     target3[:, 2] = -block[:, 2]
     target4[:, 2] = -block[:, 2]
@@ -277,29 +274,40 @@ def grab_static_block(block, arm):
     # Ensure the gripper is rotated to match the face of a block
     q_goal[-1] = q_goal_angle[-1];
 
-    #move down to catch the block
+    # move down to catch the block
     arm.safe_move_to_position(q_goal)
 
-    #close gripper
+    # close gripper to pick up the block
     arm.exec_gripper_cmd(arm._gripper.MIN_WIDTH, 10 )
+    print("Picking up the block, the gripper state is: ", arm.get_gripper_state())
     #arm.close_gripper();
 
-    #move to neutral position
+    # move to neutral position
     arm.safe_move_to_position(arm.neutral_position())
-    print(arm.get_gripper_state())
+    print("Returning to neutral position, the gripper state is: ", arm.get_gripper_state())
 
 #This function drops a block at a given location on the field
 # Target - the location (not orientation) that the block needs to be dropped
 #stack_no : What block is it on this target location's stack (first block, or second one, or third..)
 def drop_static_block(target, arm,stack_no = 1):
+    """
+        This function drops a block at a given target location on the field.
+
+        Input:
+            target: the location (not orientation) that the block needs to be dropped
+            stack_no: what block is it on this target location's stack (first block, or second one, or third..)
+
+    """
     global MAX_STACK_HEIGHT
 
     if(stack_no > MAX_STACK_HEIGHT):
         MAX_STACK_HEIGHT = stack_no;
 
-    q_static_block_point = np.array([ -0.19597102,  0.02002129  ,0.17654651 ,-2.11382587  ,0.03078337 , 2.10129901 ,1.11344131]);
+    # A seed for the IK - from a position nearby the target table
+    q_static_block_point = np.array([ -0.19597102,  0.02002129  ,0.17654651 ,-2.11382587  ,0.03078337 , 2.10129901 ,1.11344131])
+
     #jp,target = fk.forward(target);
-    target_height = target[2,3];
+    target_height = target[2,3]
     target[2,3] += (MAX_STACK_HEIGHT)*BLOCK_HEIGHT #This goes one block above the stack as to not knock it down
     #print("in drop static block")
     #print("stack height : ", target[2,3])
@@ -491,11 +499,11 @@ if __name__ == "__main__":
     print("MAX_STACK_HEIGHT = ", MAX_STACK_HEIGHT)
     MAX_STACK_HEIGHT = 1;
 
-    # test_1(detector, arm);
+    test_1(detector, arm);
     # test_2(detector, arm);
     # test_3(detector,arm);
     # test_4(detector, arm);
-    dynamic_test(detector,arm)
+    # dynamic_test(detector,arm)
 
     #arm.safe_move_to_position(arm.neutral_position() + .1)
 
