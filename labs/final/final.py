@@ -130,7 +130,6 @@ def read_dynamic_camera(data): #Gives a list of transforms for the top face of e
 # 
 #    jp,target = fk.forward(q_dynamic_block_point);
  
- 
 def grab_dynamic_block(arm):
  
     #A seed for the IK - from a position nearby the blocks
@@ -332,7 +331,7 @@ def drop_static_block(target, arm,stack_no = 1):
 ############################ TESTING ENVIRONMENTS ################################
 
 
-def test_1(detector, arm): #Pick and place 1 block
+def test_1(detector, arm): # Pick and place 1 block (using table height)
     static_blocks = read_camera(detector.get_detections());
 
     #The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
@@ -347,7 +346,11 @@ def test_1(detector, arm): #Pick and place 1 block
     grab_static_block(block,arm); #Grab the block from the table
     drop_static_block(drop_target_copy,arm); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
 
-def test_2(detector, arm): #Use their own Z estimate and see how bad it is
+def test_2(detector, arm): # Use their own Z estimate and see how bad it is
+    """
+        Stacks all the blokcs using the Z estimate read from the camera.
+    """
+
     print("Executing Test 2 : Completely using the Z estimates from the camera")
 
     ##This function reads and identifies all the static blocks in the field by their top tag
@@ -372,11 +375,10 @@ def test_2(detector, arm): #Use their own Z estimate and see how bad it is
         stack = stack+1;
         pass;
 
-def test_3(detector, arm): #Stacks all blocks using table height **
+def test_3(detector, arm): # Stacks all blocks using table height
     static_blocks = read_camera(detector.get_detections());
 
-
-    print("Neutral Position : ",arm.neutral_position())
+    # print("Neutral Position : ",arm.neutral_position())
     ##The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
     _,drop_target =fk.forward(arm.neutral_position());
     drop_target[:,3] = static_blocks[0][:,3];
@@ -489,17 +491,14 @@ if __name__ == "__main__":
     print("MAX_STACK_HEIGHT = ", MAX_STACK_HEIGHT)
     MAX_STACK_HEIGHT = 1;
 
-    #test_1(detector, arm);
-    test_3(detector,arm);
+    # test_1(detector, arm);
+    test_2(detector, arm);
+    # test_3(detector,arm);
+    # test_4(detector, arm);
     #dynamic_test(detector,arm)
-
-    
-
-   
 
     #arm.safe_move_to_position(arm.neutral_position() + .1)
 
     #q_stack_table_point = [-0.1933028,  -0.0421463,  -0.18381685, -1.92314552, -0.00777114,  1.83777088, 0.38233042] # [0.5,-0.2,0.4,1]
-
 
     # END STUDENT CODE
