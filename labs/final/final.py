@@ -35,12 +35,17 @@ team = "blue"
 
 
 def read_camera(data): #Gives a list of transforms for the top face of each static blocks only
-    detector = ObjectDetector();
-    ground = ["tag0"];
-    static_blocks = ["tag1", "tag2", "tag3","tag4","tag5", "tag6"]  #The list all tags read in the static block side
-    blocks = [];
-    white_blocks = [];
-    if team == "blue" :
+    """
+        Input: 
+            data: detector.get_detections()
+
+        Returns: a list of transformation matrices for the top face of each static block
+    """
+    ground = ["tag0"]
+    static_blocks = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]  #The list all tags read in the static block side
+    blocks = []
+    white_blocks = []
+    if team == "blue":
         sign = 1;
     else:
         sign = -1;                                               #final set of static blocks
