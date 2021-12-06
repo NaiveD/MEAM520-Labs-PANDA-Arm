@@ -14,7 +14,7 @@ from core.utils import time_in_seconds
 
 # The library you implemented over the course of this semester!
 from lib.calculateFK import FK
-from lib.calcJacobian import calcJacobian
+from lib.calcJacobian import FK
 from lib.solveIK import IK
 from lib.rrt import rrt
 from lib.loadmap import loadmap
@@ -32,12 +32,14 @@ MAX_STACK_HEIGHT = 1
 team = "blue"
 
 
+
+
 def read_camera(data): #Gives a list of transforms for the top face of each static blocks only
     detector = ObjectDetector();
     ground = ["tag0"];
     static_blocks = ["tag1", "tag2", "tag3","tag4","tag5", "tag6"]  #The list all tags read in the static block side
     blocks = [];
-
+    white_blocks = [];
     if team == "blue" :
         sign = 1;
     else:
@@ -59,10 +61,111 @@ def read_camera(data): #Gives a list of transforms for the top face of each stat
             block = np.matmul(np.matmul(base_tag0,np.linalg.inv(tag0)),pose); #Find the transform wrt to Robot frame : T^Robo_Tag0 * T^Tag0_Cam * T ^Cam_block = T^Robo_block
             #print("check :\n", block)
             if(np.array_equal(np.round(block[:,2]),np.round(base_tag0[:,2])) and block[0,3] > 0.3 and block [1,3]*sign >0 and block[2,3] > 0.2): #Get only the blocks tags that are the top face of each block
-                blocks += [block]                                    #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
+                if name == "tag6":
+                    white_blocks += [block]
+                else:
+                    blocks += [block]                                    #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
 
-    return blocks
+    return blocks+white_blocks
+    
+    
+ ########################################################### DYNAMIC BLOCKS ###########################################################################
+def has_gripped_block(arm):
+    
+    arm.exec_gripper_cmd(0.03, 100)
+    position = arm.get_gripper_state();
+    pos = position["position"]
+    if pos[0] + pos[1] < 0.05 :
+    	arm.exec_gripper_cmd(0.8, 100)
+    	return False;
+    return True;
 
+def read_dynamic_camera(data): #Gives a list of transforms for the top face of each static blocks only
+    detector = ObjectDetector();
+    ground = ["tag0"];
+    static_blocks = ["tag7", "tag8", "tag9","tag10","tag11", "tag12"]  #The list all tags read in the static block side
+    closest_block = []
+    distance = 2;
+    if team == "blue" :
+        sign = 1;
+    else:
+        sign = -1;                                               #final set of static blocks
+
+    base_tag0 = np.array([[1,  0,  0 , -0.5],                       #Transformation of tag 0 with respect to robot base
+                         [ 0,  1,  0,   0  ],
+                         [ 0,  0,  1,   0  ],
+                         [ 0,  0,  0, 1   ]])
+
+    for (name,pose) in data:
+        if name in ground:                                          #Find the transform for Tag0 wrt Camera
+            tag0 = pose;
+            break;
+
+    for (name,pose) in data:
+        if name in static_blocks:                                   #For each tag 6 or below
+            block_cam  = pose;
+            block = np.matmul(np.matmul(base_tag0,np.linalg.inv(tag0)),pose); #Find the transform wrt to Robot frame : T^Robo_Tag0 * T^Tag0_Cam * T ^Cam_block = T^Robo_block
+            #print("check :\n", block)
+            if(np.array_equal(np.round(block[:,2]),np.round(base_tag0[:,2]))): #Get only the blocks tags that are the top face of each block
+                if(np.abs(block[1,3]) < distance):
+                    distance = np.abs(block[1,3]);    
+                    closest_block = block;                             #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
+
+    return closest_block
+ 
+#def scoop_dynamic_block(block, arm):
+#    arm.safe_move_to_position(arm.neutral_position())
+#    q_dynamic_block_point = np.array([-2.8,1.5,1.7,-1,-.7,1.5,-0.7]) 
+# 
+#    jp,target = fk.forward(q_dynamic_block_point);
+ 
+ 
+def grab_dynamic_block(arm):
+ 
+    #A seed for the IK - from a position nearby the blocks
+    q_dynamic_block_point = np.array(	[-1.25429965 , 0.57334985 ,-0.34829473, -1.2432462  , 0.19061448 , 1.78492184, -0.87674544])	#[ -1.5,  0.7  ,0 ,-1 ,0,1.7, -pi/4]);
+
+    limits_last_joint = [-2.8973,2.8973]
+
+    jp,target = fk.forward(q_dynamic_block_point);
+
+    #target[1,3] += 0.03
+    arm.safe_move_to_position(q_dynamic_block_point)
+    # # ---  Move above block --- ##
+    
+    #Move to above target
+    arm.open_gripper();
+   
+    target[2,3] -= 0.11
+    
+    success = False;
+    while not success:
+        q_goal,success,xx = ik.inverse(target, q_dynamic_block_point);
+
+    print(q_goal);
+    #move down to catch the block
+    arm.safe_move_to_position(q_goal)
+
+    #close gripper
+    #has_block = has_gripped_block(arm)
+    count = 0;
+    while not has_gripped_block(arm) and count < 6:
+        count += 1;
+        pass;
+    
+    if(count >= 6):
+        grab_dynamic_block(arm);
+    #arm.exec_gripper_cmd(arm._gripper.MIN_WIDTH, 10 )
+    #arm.close_gripper();
+    #move to neutral position
+    arm.safe_move_to_position(arm.neutral_position())
+ 
+ 
+ 
+ 
+ ############################################################END DYNAMIC #################################################################################
+    
+    
 #This function takes a block transform as input, and picks up that block and takes it to the center position
 def grab_static_block(block, arm):
     #A seed for the IK - from a position nearby the blocks
@@ -106,12 +209,12 @@ def grab_static_block(block, arm):
     target2 = copy.deepcopy(block)
     target3 = copy.deepcopy(block)
     target4 = copy.deepcopy(block)
-    print("block = ", block)
-    print("target1 = ", target1)
+    #print("block = ", block)
+    #print("target1 = ", target1)
 
     target1[:, 2] = -block[:, 2]
-    print("block = ", block)
-    print("target1 = ", target1)
+    #print("block = ", block)
+    #print("target1 = ", target1)
     target2[:, 2] = -block[:, 2]
     target3[:, 2] = -block[:, 2]
     target4[:, 2] = -block[:, 2]
@@ -125,9 +228,24 @@ def grab_static_block(block, arm):
 
     targets = [target1, target2, target3, target4]
 
+    # Finds the minimum angle that the EE needs to rotate
+    y = np.array([0,-1,0,0])
+    angles = np.zeros(4)
+    for i in range(4):
+        t = targets[i]
+        # Dot product between approximate direction of end-effector y and target y
+        angles[i] = (math.acos(np.dot(y, t[:,1])/np.linalg.norm(t[:,1])))
+
+    #Sorts targets from smallest to largest angle
+    targetSorted = []
+    for j in range(4):
+        ind = np.argmin(angles)
+        targetSorted.append(targets[ind])
+        angles[ind] = 10
+
     # Find the config q[7] of the gripper to match any of the axes
     success = False;
-    for t in targets:
+    for t in targetSorted:
         q_goal_angle,success,xx = ik.inverse(t, q_static_block_point)
 
         if success == True:
@@ -137,7 +255,7 @@ def grab_static_block(block, arm):
 
     ## ---               --- ##
 
-    ## Rotate to match the block angle above the target
+    ## Rotate last joint to match the block angle above the target
     q_goal[-1] = q_goal_angle[-1];
     arm.safe_move_to_position(q_goal)
 
@@ -158,6 +276,7 @@ def grab_static_block(block, arm):
     #arm.close_gripper();
     #move to neutral position
     arm.safe_move_to_position(arm.neutral_position())
+    print(arm.get_gripper_state())
 
 #This function drops a block at a given location on the field
 # Target - the location (not orientation) that the block needs to be dropped
@@ -310,6 +429,31 @@ def test_4(detector, arm): #stack 2 stacks of 2
 
 
 
+
+def dynamic_test(detector,arm):
+     #This function reads and identifies all the static blocks in the field by their top tag
+    static_blocks = read_camera(detector.get_detections());
+    dynamic_block = read_dynamic_camera(detector.get_detections());
+    
+  
+    stack = 1;
+    #The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
+    _,drop_target =fk.forward(arm.neutral_position());
+    drop_target[:,3] = static_blocks[0][:,3];
+    print("table height: ",drop_target[2,3])
+    drop_target[1,3] = -drop_target[1,3]
+    drop_target[2,3] -= BLOCK_HEIGHT/2
+
+    print(drop_target)
+
+    while True:
+    	drop_target_copy = copy.deepcopy(drop_target)
+    	grab_dynamic_block(arm); #Grab the block from the table
+    	drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
+    	stack += 1;
+	
+
+
 def save_readings():
     pass;
     #save camera readings on a file
@@ -317,7 +461,7 @@ def save_readings():
 
 
 
-
+############################################################################### MAIN #############################################################################
 
 if __name__ == "__main__":
 
@@ -345,50 +489,14 @@ if __name__ == "__main__":
     print("MAX_STACK_HEIGHT = ", MAX_STACK_HEIGHT)
     MAX_STACK_HEIGHT = 1;
 
-    test_2(detector, arm);
-    # test_3(detector,arm);
+    #test_1(detector, arm);
+    #test_3(detector,arm);
+    dynamic_test(detector,arm)
 
+    
 
-    #fk = FK();
-    #ik = IK();
+   
 
-    #print("reading detector")
-
-    #This function reads and identifies all the static blocks in the field by their top tag
-    #static_blocks = read_camera(detector.get_detections());
-    #The stack number of this particular block
-    #stack = 1;
-    #print("Neutral Position : ",arm.neutral_position())
-    #The location where we want to drop the box - here I have just mirrored the drop location of the first static block on the drop side, about the robot
-    #_,drop_target =fk.forward(arm.neutral_position());
-    #drop_target[:,3] = static_blocks[0][:,3];
-    #print("table height: ",drop_target[2,3])
-    #drop_target[1,3] = -drop_target[1,3]
-    #drop_target[2,3] -= BLOCK_HEIGHT/2
-
-    #print(drop_target)
-
-    #pick each block and place it, stacking them one on top of the other
-    #for block in static_blocks:
-    #    drop_target_copy = copy.deepcopy(drop_target)
-    #    grab_static_block(block,arm); #Grab the block from the table
-    #    drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
-    #    stack = stack+1;
-        #angle = get_rotation_about_z(block);
-        #print("Angle of block ", math.degrees(angle))
-        #print("angle % 90 ", math.degrees(angle%(pi/2)))
-
-    #    pass;
-    # STUDENT CODE HERE
-
-    # Detect some tags...
-
-
-    for (name, pose) in detector.get_detections():
-        #print(detector.get_detections())
-        print(name,'\n',pose)
-        pass;
-    # Move around...
     #arm.safe_move_to_position(arm.neutral_position() + .1)
 
     #q_stack_table_point = [-0.1933028,  -0.0421463,  -0.18381685, -1.92314552, -0.00777114,  1.83777088, 0.38233042] # [0.5,-0.2,0.4,1]
