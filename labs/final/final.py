@@ -348,7 +348,7 @@ def test_1(detector, arm): # Pick and place 1 block (using table height)
 
 def test_2(detector, arm): # Use their own Z estimate and see how bad it is
     """
-        Stacks all the blokcs using the Z estimate read from the camera.
+        Stacks all the blocks using the Z estimate read from the camera.
     """
 
     print("Executing Test 2 : Completely using the Z estimates from the camera")
@@ -395,7 +395,7 @@ def test_3(detector, arm): # Stacks all blocks using table height
         drop_static_block(drop_target_copy,arm,stack_no = stack); #drop the block on to the mirror location on the other side of the first block, and stack the rest on top of each other
         stack = stack+1;
 
-def test_4(detector, arm): #stack 2 stacks of 2
+def test_4(detector, arm): #stack 2 stacks of 2 (using table height)
     print("Executing Test 4 : Stacking 2 blocks of 2, using table height")
 
     ##This function reads and identifies all the static blocks in the field by their top tag
@@ -492,10 +492,10 @@ if __name__ == "__main__":
     MAX_STACK_HEIGHT = 1;
 
     # test_1(detector, arm);
-    test_2(detector, arm);
+    # test_2(detector, arm);
     # test_3(detector,arm);
     # test_4(detector, arm);
-    #dynamic_test(detector,arm)
+    dynamic_test(detector,arm)
 
     #arm.safe_move_to_position(arm.neutral_position() + .1)
 
