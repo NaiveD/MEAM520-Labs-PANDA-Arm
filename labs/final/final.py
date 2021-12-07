@@ -20,6 +20,7 @@ from lib.rrt import rrt
 from lib.loadmap import loadmap
 from math import pi
 import copy
+import time
 
 
 ################################### HELPER FUNCTION ENVIRONMENT #############################################
@@ -151,6 +152,7 @@ def grab_dynamic_block(arm):
     #has_block = has_gripped_block(arm)
     count = 0;
     while not has_gripped_block(arm) and count < 6:
+        time.sleep(0.5)
         count += 1;
         pass;
 
