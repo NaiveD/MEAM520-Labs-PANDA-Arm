@@ -40,38 +40,40 @@ def read_camera(data): #Gives a list of transforms for the top face of each stat
         Returns: 
             a list of transformation matrices for the top face of each static block
     """
+    detector = ObjectDetector()
 
-    ground = ["tag0"]
-    static_blocks = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]  #The list all tags read in the static block side
-    blocks = []
-    white_blocks = []
-    if team == "blue":
-        sign = 1;
-    else:
-        sign = -1;                                               #final set of static blocks
+    # ground = ["tag0"]
+    # static_blocks = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]  #The list all tags read in the static block side
+    # blocks = []
+    # white_blocks = []
+    # if team == "blue":
+    #     sign = 1;
+    # else:
+    #     sign = -1;                                               #final set of static blocks
 
-    base_tag0 = np.array([[1,  0,  0 , -0.5],                       #Transformation of tag 0 with respect to robot base
-                         [ 0,  1,  0,   0  ],
-                         [ 0,  0,  1,   0  ],
-                         [ 0,  0,  0, 1   ]])
+    # base_tag0 = np.array([[1,  0,  0 , -0.5],                       #Transformation of tag 0 with respect to robot base
+    #                      [ 0,  1,  0,   0  ],
+    #                      [ 0,  0,  1,   0  ],
+    #                      [ 0,  0,  0, 1   ]])
 
-    for (name,pose) in data:
-        if name in ground:                                          #Find the transform for Tag0 wrt Camera
-            tag0 = pose;
-            break;
+    # for (name,pose) in data:
+    #     if name in ground:                                          #Find the transform for Tag0 wrt Camera
+    #         tag0 = pose;
+    #         break;
 
-    for (name,pose) in data:
-        if name in static_blocks:                                   #For each tag 6 or below
-            block_cam  = pose;
-            block = np.matmul(np.matmul(base_tag0,np.linalg.inv(tag0)),pose); #Find the transform wrt to Robot frame : T^Robo_Tag0 * T^Tag0_Cam * T ^Cam_block = T^Robo_block
-            #print("check :\n", block)
-            if(np.array_equal(np.round(block[:,2]),np.round(base_tag0[:,2])) and block[0,3] > 0.3 and block [1,3]*sign >0 and block[2,3] > 0.2): #Get only the blocks tags that are the top face of each block
-                if name == "tag6":
-                    white_blocks += [block]
-                else:
-                    blocks += [block]                                    #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
+    # for (name,pose) in data:
+    #     if name in static_blocks:                                   #For each tag 6 or below
+    #         block_cam  = pose;
+    #         block = np.matmul(np.matmul(base_tag0,np.linalg.inv(tag0)),pose); #Find the transform wrt to Robot frame : T^Robo_Tag0 * T^Tag0_Cam * T ^Cam_block = T^Robo_block
+    #         #print("check :\n", block)
+    #         if(np.array_equal(np.round(block[:,2]),np.round(base_tag0[:,2])) and block[0,3] > 0.3 and block [1,3]*sign >0 and block[2,3] > 0.2): #Get only the blocks tags that are the top face of each block
+    #             if name == "tag6":
+    #                 white_blocks += [block]
+    #             else:
+    #                 blocks += [block]                                    #The above limits need tuning and may not be having any effect ***     #add it to the list of blocks
 
-    return blocks + white_blocks
+    blocks = detector.get_static_blocks()
+    return blocks
     
 #find the angle at which a given rotation matrix has rot
 def get_rotation_about_z(rot):
