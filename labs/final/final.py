@@ -125,7 +125,12 @@ def read_dynamic_camera(data): #Gives a list of transforms for the top face of e
 def grab_dynamic_block(arm):
 
     #A seed for the IK - from a position nearby the blocks
-    q_dynamic_block_point = np.array(	[-1.25429965 , 0.57334985 ,-0.34829473, -1.2432462  , 0.19061448 , 1.78492184, -0.87674544])	#[ -1.5,  0.7  ,0 ,-1 ,0,1.7, -pi/4]);
+    # q_dynamic_block_point = np.array(	[-1.25429965 , 0.57334985 ,-0.34829473, -1.2432462  , 0.19061448 , 1.78492184, -0.87674544])	#[ -1.5,  0.7  ,0 ,-1 ,0,1.7, -pi/4]);
+    if team == "blue":
+        q_dynamic_block_point = np.array(	[-1.25429965 , 0.57334985 ,-0.34829473, -1.2432462  , 0.19061448 , 1.78492184, -0.87674544])	# BLUE [ -1.5,  0.7  ,0 ,-1 ,0,1.7, -pi/4]);
+    else:
+        q_dynamic_block_point = np.array([ 1.18381931 , 0.64162709 , 0.48129071, -1.16685028, -0.28514617 , 1.74460097, -0.65467289]);  # RED[ 1.5,  0.7  ,0 ,-1 ,0,1.7, -pi/4])
+
 
     limits_last_joint = [-2.8973,2.8973]
 
