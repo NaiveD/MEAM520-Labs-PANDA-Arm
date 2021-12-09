@@ -159,7 +159,6 @@ def grab_dynamic_block(arm):
     while not has_gripped_block(arm) and count < 6:
         time.sleep(0.5)
         count += 1;
-        pass;
 
     if(count >= 6):
         grab_dynamic_block(arm);
